@@ -85,19 +85,33 @@ export default class UsuarioService{
     }
 
     updateUser = async (us) => {
-        const validatedUser = this.getUserById(us.idUsuario)
-        if(validatedUser != null){
-            obj.message = "Se actualizo el usuario"
-            obj.status = 201
-            obj.success = true
-        } else{
-            obj.message = "No se pudo actualizar el usuario"
-            obj.status = 400
-        }
-        return obj
+        const validatedUser = this.updateUser(us.idUsuario)
+            try {
+                const rowCount = await repo.updateUser(id);
+                if (rowCount > 0) {
+                    obj.success = true;
+                    obj.message = "Se actualizo el usuario";
+                    obj.datos = { rowCount };
+                } else {
+                    obj.success = false;
+                    obj.message = "No se encontró el usuario para actualizar";
+                    obj.datos = null;
+                }
+            } catch (error) {
+                if (error.code === '23503') {
+                    obj.success = false;
+                    obj.message = "No se pudo actualizar el usuario";
+                    obj.datos = null;
+                } else {
+                    obj.success = false;
+                    obj.message = "Error al actualizar el usuario";
+                    obj.datos = null;
+                }
+            }
+            return obj
     }
 
-    deleteUser = async (us) => {
+    deleteUserById = async (id) => {
         try {
             const rowCount = await repo.deleteUserById(id);
             if (rowCount > 0) {
@@ -120,6 +134,7 @@ export default class UsuarioService{
                 obj.datos = null;
             }
         }
-        return respuesta;
+        return obj;
     };
 }
+
