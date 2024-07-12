@@ -1,68 +1,76 @@
-import UsuarioRepo from "../repositories/user_repository";
-import SQLHelper from '../helpers/sql-helper'
-import ValidacionesHelper from '../helpers/validaciones'
+import UserRepository from "../repositories/user_repository";
+import SQLHelper from '../helpers/sql-helper';
+import ValidacionesHelper from '../helpers/validaciones';
+import jwt from 'jsonwebtoken';
 const repo = new UsuarioRepo();
 const val = new ValidacionesHelper();
 let obj = {
     success: false,
     status: 0,
-    message: ""
+    message: "",
+    datos: null
 }
 
 export default class UsuarioService{
-    async getUserById(id){
+    getUserById = async(id) => {
         const sql = 'SELECT idUsuario FROM Usuario WHERE idUsuario = $1' 
         const values = [id];
-        let us =  await SQLHelper.SQLQuery(sql, values);
-        us = res.rows[0].count;
+        let rowCount =  await SQLHelper.SQLQuery(sql, values);
+        rowCount = res.rows[0].count;
         let res = await repo.getUserById(id)
         if(res.rowCount < 0){
             obj.status = 404
             obj.message = 'No se encontro el id del usuario'
+            obj.datos = null
         } else{
             obj.status = 200,
             obj.message = 'Se encontro el usuario'
             obj.success = true
+            obj.datos = { rowCount }
         }
-    }
-    async updateUser(us){
-        const validatedUser = this.getUserById(us.idUsuario)
-        if(validatedUser != null){
-            obj.message = "Se actualizo el usuario"
-            obj.status = 201
-            obj.success = true
-        } else{
-            obj.message = "No se pudo actualizar el usuario"
-            obj.status = 400
-        }
+        return obj
     }
 
-    login = async (dni, contraseña) => {
-        let objeto = {
+    login = async (dni, password) => {
+        let respuesta = {
             success: false,
             message: "Error de login",
             token: ""
-        }     
-        const repo = new UsuarioRepo()
-        let user = await repo.getUserByDniPassword(dni, contraseña)
-        if (user != null){
-            if(user.password === password){
-                objeto.success = true;
-                objeto.message = "Correcto";
-                objeto.token = await auth.login(user);
+        };
+        const repo = new UserRepository();
+        if (val.getValidatedDni(dni)) {
+            const usuario = await repo.getUserByDniPassword(dni, password);
+            if (usuario != null) {
+                const payload = {
+                    dni: usuario.dni,
+                    contraseña: usuario.password
+                };
+                console.log('payload', payload)
+                const options = {
+                    expiresIn: '1h',
+                };
+                const token = jwt.sign(payload, 'MedHouse', options);
+                respuesta.success = true;
+                respuesta.message = "Login exitoso";
+                respuesta.token = token;
+                return respuesta;
             }
             else{
-                objeto.message = "Contraseña incorrecta";
+                respuesta.success = false;
+                respuesta.message = "El usuario no existe";
+                respuesta.token = "";
+                return respuesta;
             }
+        } else {
+            respuesta.success = false;
+            respuesta.message = "Formato de DNI invalido";
+            respuesta.token = "";
+            return respuesta;
         }
-        else{
-            objeto.message = "No se encontro el usuario";
-        }
-        return objeto;
-    }
+    };
 
     register = async (user) => {
-        const repo = new UsuarioRepo();
+        const repo = new UserRepository();
         let ret;
         if (val.getValidatedDni(user.dni)){       
             ret = "El DNI es invalido";
@@ -76,4 +84,42 @@ export default class UsuarioService{
         return ret;
     }
 
+    updateUser = async (us) => {
+        const validatedUser = this.getUserById(us.idUsuario)
+        if(validatedUser != null){
+            obj.message = "Se actualizo el usuario"
+            obj.status = 201
+            obj.success = true
+        } else{
+            obj.message = "No se pudo actualizar el usuario"
+            obj.status = 400
+        }
+        return obj
+    }
+
+    deleteUser = async (us) => {
+        try {
+            const rowCount = await repo.deleteUserById(id);
+            if (rowCount > 0) {
+                obj.success = true;
+                obj.message = "Se elimino el usuario";
+                obj.datos = { rowCount };
+            } else {
+                obj.success = false;
+                obj.message = "No se encontró el usuario para eliminar";
+                obj.datos = null;
+            }
+        } catch (error) {
+            if (error.code === '23503') {
+                obj.success = false;
+                obj.message = "No se pudo eliminar el usuario";
+                obj.datos = null;
+            } else {
+                obj.success = false;
+                obj.message = "Error al eliminar el usuario";
+                obj.datos = null;
+            }
+        }
+        return respuesta;
+    };
 }

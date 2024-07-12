@@ -22,7 +22,7 @@ router.get('/:id', async (req, res) => {
 // Get medicamentos by category ID
 router.get('/categoria/:idCategoria', async (req, res) => {
     let ret;
-    const array =  await getMedicamentoByCategory(req.params.idCategoria)
+    const array =  await getMedicamentoByCategory(req.params.id)
     ret = res.status(array.status).send(array.message)
 });
 

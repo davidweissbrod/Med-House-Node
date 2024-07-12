@@ -10,43 +10,29 @@ const svc = new UserService();
 
 // Get user by ID
 router.get('/:id', async (req, res) => {
-    let ret;
     const array =  await getUserById(req.params.id)
-    ret = res.status(array.status).send(array.message)
+    return res.status(array.status).json(array.datos)
 });
 
 // Update user by ID
-router.put('/:id', async (req, res) => {
-    try {
-        const usuario = await user.updateUserById(new Usuario(req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.mail, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.genero, req.body.telefono));
-        if (!usuario) return res.status(404).send();
-        res.send(usuario);
-    } catch (err) {
-        res.status(400).send(err);
-    }
+router.put('/:id', auth.AuthMiddleware, async (req, res) => {
+    const array = await updateUser(req.params.id)
+    return res.status(array.status).send(array.message)
 });
 
 // Insert User
 router.post('', async (req, res) => {
-    try {
-        const usuario = await user.insertUser(new Usuario(req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.mail, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.genero, req.body.telefono))
-        res.status(201).send(usuario);
-    } catch (err) {
-        res.status(400).send(err);
-    }
+    const array = await insertUser(req.body.user)
+    return res.status(array.status).json(array.datos)
 })
 
 // Delete user by ID
-router.delete('/:id', async (req, res) => {
-    try {
-        const usuario = await user.deleteUserById(req.params.id);
-        if (!usuario) return res.status(404).send();
-        res.send(usuario);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+router.delete('/:id', auth.AuthMiddleware, async (req, res) => {
+    const array = await deleteUserById(req.params.id)
+    return res.status(array.status).send(array.message)
 });
 
+// Register User
 router.post('/api/user/register', auth.AuthMiddleware, async (req, res) => {
     let ret = await svc.register(new Users (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
     if(ret){
@@ -58,6 +44,7 @@ router.post('/api/user/register', auth.AuthMiddleware, async (req, res) => {
     return ret;
 })
 
+// Login User
 router.post('/api/user/login', auth.AuthMiddleware, async (req, res) => {
     let ret; 
     const array = await svc.login(req.body.dni, req.body.contraseña)

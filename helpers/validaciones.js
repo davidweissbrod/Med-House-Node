@@ -1,25 +1,22 @@
-function getValidateString(str){
-    let valido = true
-    if(str.length < 3 || str === ""){
-        return false
-    } 
-    return valido
-}
-
-function emailValidation(correo){
-    if (correo.indexOf("@") === -1 || correo.indexOf(".") === -1) {
-        return false;
+export default class validacion{
+    getValidatedString(str){
+        let valido = true
+        if(str.length < 3 || str === ""){
+            return false
+        } 
+        return valido
     }
-    if (correo.indexOf("@") === 0 || correo.indexOf("@") === correo.length - 1 || correo.indexOf(".") === 0 || correo.indexOf(".") === correo.length - 1) {
-        return false;
+    
+    emailValidation(correo){
+        const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        return regex.test(correo);
     }
-    return true;
-}
-
-function getValidatedDni(dni){
-    if(dni < 7 || dni > 8){
-        return false
+    
+    getValidatedDni(dni){
+        if(dni < 7 || dni > 8){
+            return false
+        }
+        return true
     }
-    return true
+    
 }
-

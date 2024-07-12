@@ -1,60 +1,38 @@
-import Farmaceutico from '../entities/Farmaceutico';
+import FarmaceuticoService from '../service/farm_service'
 import express from 'express';
 const router = express.Router();
-const farm = new Farmaceutico();
+const svc = new FarmaceuticoService();
+
+// Login y Register para farmacueticos en el futuro(?)
 
 // Get all farmaceuticos
 router.get('/', async (req, res) => {
-    try {
-        const farmaceuticos = await farm.getAllAsync();
-        res.send(farmaceuticos);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+    const array =  await svc.getAllAsync()
+    return res.status(array.status).send(array.message)
 });
 
 // Get a farmaceutico by ID
 router.get('/:id', async (req, res) => {
-    try {
-        const farmaceutico = await farm.getFarmaceuticoById(req.params.id);
-        if (!farmaceutico) return res.status(404).send('No se encontro el id');
-        res.send(farmaceutico);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+    const array =  await svc.getFarmaceuticoById(req.params.id)
+    return res.status(array.status).send(array.message)
 });
 
 // Insert Farmaceutico
 router.post('/', async (req, res) => {
-    try {
-        const farmaceutico = await farm.insertFarmaceutico(new Farmaceutico(req.body.dni, req.body.nombre, req.body.apellido, req.body.titulo, req.body.contraseña, req.body.email, req.body.genero, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.telefono))
-        if(!farmaceutico)
-        res.status(201).send(farmaceutico);
-    } catch (err) {
-        res.status(400).send(err);
-    }
+    const array =  await insertFarmaceutico(req.body.Farmaceutico)
+    return res.status(array.status).send(array.message)
 });
 
 // Update a farmaceutico by ID
 router.put('/:id', async (req, res) => {
-    try {
-        const farmaceutico = await farm.updateFarmaceuticoById(new Farmaceutico(req.body.dni, req.body.nombre, req.body.apellido, req.body.titulo, req.body.contraseña, req.body.email, req.body.genero, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.telefono));
-        if (!farmaceutico) return res.status(404).send();
-        res.send(farmaceutico);
-    } catch (err) {
-        res.status(400).send(err);
-    }
+    const array =  await updateFarmaceuticoById(req.params.id)
+    return res.status(array.status).send(array.message)
 });
 
 // Delete a farmaceutico by ID
 router.delete('/:id', async (req, res) => {
-    try {
-        const farmaceutico = await farm.deleteFarmaceuticoById(req.params.id);
-        if (!farmaceutico) return res.status(404).send();
-        res.send(farmaceutico);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+    const array =  await deleteFarmaceuticoById(req.params.id)
+    return res.status(array.status).send(array.message)
 });
 
 export default router;
