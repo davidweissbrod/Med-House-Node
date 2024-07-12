@@ -1,5 +1,7 @@
 import UserService from '../service/user_service'
 import express from "express"
+import AuthMiddleware from '../middlewares/auth_middleware';
+const auth = new AuthMiddleware();
 const router = express.Router();
 const svc = new UserService();
 
@@ -44,5 +46,27 @@ router.delete('/:id', async (req, res) => {
         res.status(500).send(err);
     }
 });
+
+router.post('/api/user/register', auth.AuthMiddleware, async (req, res) => {
+    let ret = await svc.register(new Users (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
+    if(ret){
+        ret = res.status(201).send("Creado");
+    }
+    else{
+        ret = res.status(400).send(respuesta);
+    }   
+    return ret;
+})
+
+router.post('/api/user/login', auth.AuthMiddleware, async (req, res) => {
+    let ret; 
+    const array = await svc.login(req.body.dni, req.body.contraseña)
+    if(array.success){   
+        ret = res.status(201).json(array)
+    } else{
+        ret = res.status(400).json(array)
+    }
+    return ret;
+})
 
 export default router;

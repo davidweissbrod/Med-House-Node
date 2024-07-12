@@ -1,6 +1,7 @@
 import Medicamento from "../entities/Medicamento";
 import express from 'express'
-
+import AuthMiddleware from "../middlewares/auth_middleware";
+const auth = new AuthMiddleware();
 const router = express.Router();
 const med = new Medicamento();
 

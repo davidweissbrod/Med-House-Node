@@ -16,7 +16,10 @@ function emailValidation(correo){
     return true;
 }
 
-function idValidation(id){
-    
+function getValidatedDni(dni){
+    if(dni < 7 || dni > 8){
+        return false
+    }
+    return true
 }
 

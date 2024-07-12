@@ -1,7 +1,8 @@
 import UsuarioRepo from "../repositories/user_repository";
 import SQLHelper from '../helpers/sql-helper'
+import ValidacionesHelper from '../helpers/validaciones'
 const repo = new UsuarioRepo();
-
+const val = new ValidacionesHelper();
 let obj = {
     success: false,
     status: 0,
@@ -36,15 +37,43 @@ export default class UsuarioService{
         }
     }
 
-    async insertUser(us){
-       const repo = new UsuarioRepo();
+    login = async (dni, contraseña) => {
+        let objeto = {
+            success: false,
+            message: "Error de login",
+            token: ""
+        }     
+        const repo = new UsuarioRepo()
+        let user = await repo.getUserByDniPassword(dni, contraseña)
+        if (user != null){
+            if(user.password === password){
+                objeto.success = true;
+                objeto.message = "Correcto";
+                objeto.token = await auth.login(user);
+            }
+            else{
+                objeto.message = "Contraseña incorrecta";
+            }
+        }
+        else{
+            objeto.message = "No se encontro el usuario";
+        }
+        return objeto;
     }
 
-    async deleteUserById(id){
-        try{
-            return await repo.deleteUserById(id)
-        } catch(e){
-            return new Error('No se pudo eliminar el usuario: ' + e.message)
+    register = async (user) => {
+        const repo = new UsuarioRepo();
+        let ret;
+        if (val.getValidatedDni(user.dni)){       
+            ret = "El DNI es invalido";
         }
+        else if (val.emailValidation(user.email)){
+            ret = "El Email no es valido";
+        }
+        else{
+            ret = repo.insertUser(user);
+        }
+        return ret;
     }
+
 }
