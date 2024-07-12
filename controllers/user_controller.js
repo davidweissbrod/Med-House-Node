@@ -15,34 +15,31 @@ router.get('/:id', async (req, res) => {
 
 // Update user by ID
 router.put('/:id', async (req, res) => {
-    try {
-        const usuario = await user.updateUserById(new Usuario(req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.mail, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.genero, req.body.telefono));
-        if (!usuario) return res.status(404).send();
-        res.send(usuario);
-    } catch (err) {
-        res.status(400).send(err);
-    }
-});
+    let ret;
+    const array =  await updateUser(req.params.id)
+    ret = res.status(array.status).send(array.message)
+    
+})
 
 // Insert User
-router.post('', async (req, res) => {
-    try {
-        const usuario = await user.insertUser(new Usuario(req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.mail, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.genero, req.body.telefono))
-        res.status(201).send(usuario);
-    } catch (err) {
-        res.status(400).send(err);
-    }
+router.post('', async (req, res) => {  //revisar
+    let ret;
+    const array =  await getUserById(req.body.user)
+    ret = res.status(array.status).send(array.message)
 })
 
 // Delete user by ID
 router.delete('/:id', async (req, res) => {
-    try {
-        const usuario = await user.deleteUserById(req.params.id);
-        if (!usuario) return res.status(404).send();
-        res.send(usuario);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+    let ret;
+    const array =  await deleteUserById(req.params.id)
+    ret = res.status(array.status).send(array.message)
 });
 
 export default router;
+
+
+router.get('', async(req,res) => {
+    let ret;
+    const array =  await getUserByDniPassword(req.body.dni, req.body.contraseña)
+    ret = res.status(array.status).send(array.message)
+});
