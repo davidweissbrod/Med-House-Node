@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Get a medicamento by ID
+// Get medicamento by ID
 router.get('/:id', async (req, res) => {
     try {
         const medicamento = await med.getMedicamentoById(req.params.id);
@@ -30,7 +30,7 @@ router.get('/categoria/:idCategoria', async (req, res) => {
     try {
         const medicamentos = await med.getMedicamentosByCategoria(req.params.idCategoria);
         if (!medicamentos) return res.status(404).send();
-        res.send(medicamentos);
+        res.status(200).send(medicamentos);
     } catch (err) {
         res.status(500).send(err);
     }
@@ -51,7 +51,7 @@ router.put('/:id', async (req, res) => {
     try {
         const medicamento = await med.updateMedicamentoById(new Medicamento(req.body.nombre, req.body.marca, req.body.dosis, req.body.formaFarm, req.body.droga, req.body.idCategoria, req.body.descripcion, req.body.stock));
         if (!medicamento) return res.status(404).send();
-        res.send(medicamento);
+        res.status(201).send(medicamento);
     } catch (err) {
         res.status(400).send(err);
     }
@@ -62,7 +62,7 @@ router.delete('/:id', async (req, res) => {
     try {
         const medicamento = await med.deleteMedicamentoById(req.params.id);
         if (!medicamento) return res.status(404).send();
-        res.send(medicamento);
+        res.status(201).send(medicamento);
     } catch (err) {
         res.status(500).send(err);
     }

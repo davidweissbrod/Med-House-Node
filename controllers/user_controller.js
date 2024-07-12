@@ -1,21 +1,16 @@
-import Usuario from '../entities/Usuario';
+import UserService from '../service/user_service'
 import express from "express"
 const router = express.Router();
-const user = new Usuario();
-
+const svc = new UserService();
 
 //Faltan endpoints de auth con jwt
 
 
 // Get user by ID
 router.get('/:id', async (req, res) => {
-    try {
-        const usuario = await user.getUserById(req.params.id);
-        if (!usuario) return res.status(404).send();
-        res.send(usuario);
-    } catch (err) {
-        res.status(500).send(err);
-    }
+    let ret;
+    const array =  await getUserById(req.params.id)
+    ret = res.status(array.status).send(array.message)
 });
 
 // Update user by ID

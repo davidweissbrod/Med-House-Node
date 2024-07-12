@@ -16,3 +16,7 @@ function emailValidation(correo){
     return true;
 }
 
+function idValidation(id){
+    
+}
+
