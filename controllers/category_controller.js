@@ -4,7 +4,7 @@ const svc = new CategoryService();
 const router = express.Router();
 
 router.get(':/id', async (req, res) => {
-    const array = await getCategoryById(req.params.id)
+    const array = await svc.getCategoryById(req.params.id)
     return res.status(array.status).json(array.datos)
 })
 

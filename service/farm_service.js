@@ -1,8 +1,15 @@
-import FarmaceuticoRepository from "../repositories/farm_repository";
+import FarmRepository from '../repositories/farm_repository';
 import Helper from '../helpers/sql-helper'
-const repo = new FarmaceuticoRepository();
+import validacion from "../helpers/validaciones";
+import jwt from '../middlewares/auth_middleware'
+const repo = new FarmRepository();
 const SQLHelper = new Helper();
-
+const val = new validacion();
+let obj = {
+    success: false,
+    message: "",
+    token: ""
+}
 export default class FarmaceuticoService{
     async getFarmaceuticoById(id){
         const sql = 'SELECT idFarmaceutico FROM Usuario WHERE idFarmaceutico = $1' 
@@ -23,13 +30,9 @@ export default class FarmaceuticoService{
         return obj
     }
 
-    async insertFarmacetico(farmaceutico){
-        //Se hace con el register
-    }
-
     async updateFarmaceutico(farmaceutico){
             try {
-                const rowCount = await repo.deleteUserById(id);
+                const rowCount = await repo.updateFarmaceutico(farmaceutico);
                 if (rowCount > 0) {
                     obj.success = true;
                     obj.message = "Se actualizo el farmaceutico";
@@ -77,4 +80,70 @@ export default class FarmaceuticoService{
         }
         return obj;
     };
+
+    login = async (dni, contraseña) => {
+        let respuesta = {
+            success: false,
+            message: "Error de login",
+            token: ""
+        };
+        if (val.getValidatedDni(dni)) {
+            const farm = await repo.getFarmByDniPassword(dni, contraseña);
+            if (farm != null) {
+                const payload = {
+                    dni: farm.dni,
+                    contraseña: farm.password
+                };
+                console.log('payload', payload)
+                const options = {
+                    expiresIn: '1h',
+                };
+                const token = jwt.sign(payload, 'MedHouse', options);
+                respuesta.success = true;
+                respuesta.message = "Login exitoso";
+                respuesta.token = token;
+                return respuesta;
+            }
+            else{
+                respuesta.success = false;
+                respuesta.message = "El usuario no existe";
+                respuesta.token = "";
+                return respuesta;
+            }
+        } else {
+            respuesta.success = false;
+            respuesta.message = "Formato de DNI invalido";
+            respuesta.token = "";
+            return respuesta;
+        }
+    }
+
+    register = async (farm) => {
+        let ret;
+        if (val.getValidatedDni(farm.dni)){       
+            ret = "El DNI es invalido";
+        }
+        else if (val.emailValidation(farm.email)){
+            ret = "El Email no es valido";
+        }
+        else{
+            ret = repo.insertFarmaceutico(farm);
+        }
+        return ret;
+    }
+
+    getFarmByDniPassword = async(dni, password) => {
+        let res = await repo.getFarmByDniPassword(dni, password)
+        if(res.rowCount < 0){
+            obj.status = 404
+            obj.message = 'No se encontro el farmaceutico'
+            obj.datos = null
+        } else{
+            obj.status = 200,
+            obj.message = 'Se encontro el farmaceutico'
+            obj.success = true
+            obj.datos = { rowCount }
+        }
+        return obj;
+    }
 }

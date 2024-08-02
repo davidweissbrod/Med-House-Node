@@ -5,8 +5,6 @@ const auth = new AuthMiddleware();
 const router = express.Router();
 const svc = new UserService();
 
-//Faltan endpoints de auth con jwt
-
 
 // Get user by ID
 router.get('/:id', async (req, res) => {
@@ -32,6 +30,13 @@ router.delete('/:id', auth.AuthMiddleware, async (req, res) => {
     return res.status(array.status).send(array.message)
 });
 
+
+// Get DNI  y Contraseña
+router.get('', async (req, res) => {
+    const array = await getUserByDniPassword(req.body.dni, req.body.contraseña)
+    return res.status(array.status).send(array.message)
+})
+
 // Register User
 router.post('/api/user/register', auth.AuthMiddleware, async (req, res) => {
     let ret = await svc.register(new Users (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
@@ -47,7 +52,7 @@ router.post('/api/user/register', auth.AuthMiddleware, async (req, res) => {
 // Login User
 router.post('/api/user/login', auth.AuthMiddleware, async (req, res) => {
     let ret; 
-    const array = await svc.login(req.body.dni, req.body.contraseña)
+    const array = await svc.login(req.body.dni, req.body.constraseña)
     if(array.success){   
         ret = res.status(201).json(array)
     } else{
@@ -55,5 +60,11 @@ router.post('/api/user/login', auth.AuthMiddleware, async (req, res) => {
     }
     return ret;
 })
+
+// Validar Token
+router.get('/validartoken', auth.AuthMiddleware, async (req, res) => {
+    return res.status(200).send("Token Valido");
+});
+
 
 export default router;

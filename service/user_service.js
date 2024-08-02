@@ -85,9 +85,9 @@ export default class UsuarioService{
     }
 
     updateUser = async (us) => {
-        const validatedUser = this.updateUser(us.idUsuario)
+        const validatedUser = this.updateUser(us)
             try {
-                const rowCount = await repo.updateUser(id);
+                const rowCount = await repo.updateUser(us);
                 if (rowCount > 0) {
                     obj.success = true;
                     obj.message = "Se actualizo el usuario";
@@ -136,5 +136,19 @@ export default class UsuarioService{
         }
         return obj;
     };
+    getUserByDniPassword = async(dni, password) => {
+        let res = await repo.getUserByDniPassword(dni, password)
+        if(res.rowCount < 0){
+            obj.status = 404
+            obj.message = 'No se encontro el usuario'
+            obj.datos = null
+        } else{
+            obj.status = 200,
+            obj.message = 'Se encontro el usuario'
+            obj.success = true
+            obj.datos = { rowCount }
+        }
+        return obj;
+    }
 }
 
