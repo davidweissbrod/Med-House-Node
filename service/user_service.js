@@ -1,8 +1,8 @@
-import UserRepository from "../repositories/user_repository";
-import SQLHelper from '../helpers/sql-helper';
-import ValidacionesHelper from '../helpers/validaciones';
+import UserRepository from "../repositories/user_repository.js";
+import SQLHelper from '../helpers/sql-helper.js';
+import ValidacionesHelper from '../helpers/validaciones.js';
 import jwt from 'jsonwebtoken';
-const repo = new UsuarioRepo();
+const repo = new UserRepository();
 const val = new ValidacionesHelper();
 let obj = {
     success: false,

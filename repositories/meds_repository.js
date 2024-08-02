@@ -1,4 +1,4 @@
-import SQL_Helper from '../helpers/sql-helper'
+import SQL_Helper from '../helpers/sql-helper.js'
 const helpBD = new SQL_Helper();
 
 export default class MedsRepository{

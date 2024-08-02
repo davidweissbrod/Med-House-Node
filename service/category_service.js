@@ -1,5 +1,5 @@
-import Helper from '../helpers/sql-helper'
-import CategoryRepository from '../repositories/category_repository';
+import Helper from '../helpers/sql-helper.js'
+import CategoryRepository from '../repositories/category_repository.js';
 const sqlHelper = new Helper();
 const repo = new CategoryRepository();
 let obj = {

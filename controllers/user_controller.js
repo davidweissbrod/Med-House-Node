@@ -1,6 +1,7 @@
-import UserService from '../service/user_service'
+import UserService from '../service/user_service.js'
+import Usuario from '../entities/Usuario.js'
 import express from "express"
-import AuthMiddleware from '../middlewares/auth_middleware';
+import AuthMiddleware from '../middlewares/auth_middleware.js';
 const auth = new AuthMiddleware();
 const router = express.Router();
 const svc = new UserService();
@@ -8,63 +9,63 @@ const svc = new UserService();
 
 // Get user by ID
 router.get('/:id', async (req, res) => {
-    const array =  await getUserById(req.params.id)
-    return res.status(array.status).json(array.datos)
+    const array = await getUserById(req.params.id);
+    return res.status(array.status).json(array.datos);
 });
 
-// Update user by ID
-router.put('/:id', auth.AuthMiddleware, async (req, res) => {
-    const array = await updateUser(req.params.id)
-    return res.status(array.status).send(array.message)
+// Update user
+router.put('/:id', auth.authMiddleware, async (req, res) => { // Usar `:id` para especificar el usuario a actualizar
+    const array = await updateUser(req.params.id, req.body.Usuario); // Asumimos que `updateUser` necesita ID
+    return res.status(array.status).send(array.message);
 });
 
 // Insert User
 router.post('', async (req, res) => {
-    const array = await insertUser(req.body.user)
-    return res.status(array.status).json(array.datos)
-})
-
-// Delete user by ID
-router.delete('/:id', auth.AuthMiddleware, async (req, res) => {
-    const array = await deleteUserById(req.params.id)
-    return res.status(array.status).send(array.message)
+    const array = await insertUser(req.body.Usuario);
+    return res.status(array.status).json(array.datos);
 });
 
+// Delete user by ID
+router.delete('/:id', auth.authMiddleware, async (req, res) => {
+    const array = await deleteUserById(req.params.id);
+    return res.status(array.status).send(array.message);
+});
 
-// Get DNI  y Contraseña
-router.get('', async (req, res) => {
-    const array = await getUserByDniPassword(req.body.dni, req.body.contraseña)
-    return res.status(array.status).send(array.message)
-})
+// Get DNI and Password (might need to be a POST request if you're sending body data)
+router.post('/login', async (req, res) => {
+    const array = await getUserByDniPassword(req.body.dni, req.body.contraseña);
+    return res.status(array.status).send(array.message);
+});
 
 // Register User
-router.post('/api/user/register', auth.AuthMiddleware, async (req, res) => {
-    let ret = await svc.register(new Users (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
+router.post('/register', async (req, res) => {
+    let ret = await svc.register(new Users(1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
     if(ret){
         ret = res.status(201).send("Creado");
     }
     else{
         ret = res.status(400).send(respuesta);
-    }   
-    return ret;
-})
-
-// Login User
-router.post('/api/user/login', auth.AuthMiddleware, async (req, res) => {
-    let ret; 
-    const array = await svc.login(req.body.dni, req.body.constraseña)
-    if(array.success){   
-        ret = res.status(201).json(array)
-    } else{
-        ret = res.status(400).json(array)
     }
     return ret;
-})
+});
+
+// Login User
+router.get('/login', auth.authMiddleware, async (req, res) => {
+    let ret; 
+    const array = await svc.login(req.body.dni, req.body.contraseña);
+    if(array.success){   
+        ret = res.status(201).json(array);
+    } else{
+        ret = res.status(400).json(array);
+    }
+    return ret;
+});
 
 // Validar Token
-router.get('/validartoken', auth.AuthMiddleware, async (req, res) => {
+router.get('/validartoken', auth.authMiddleware, async (req, res) => {
     return res.status(200).send("Token Valido");
 });
+
 
 
 export default router;

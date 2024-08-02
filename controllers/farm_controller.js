@@ -1,10 +1,11 @@
-import FarmaceuticoService from '../service/farm_service'
+import FarmaceuticoService from '../service/farm_service.js'
 import express from 'express';
-import AuthMiddleware from '../middlewares/auth_middleware';
-import Farmaceutico from '../entities/Farmaceutico'
+import AuthMiddleware from '../middlewares/auth_middleware.js';
+import Farmaceutico from '../entities/Farmaceutico.js'
 const router = express.Router();
 const svc = new FarmaceuticoService();
 const auth = new AuthMiddleware();
+
 // Get all farmaceuticos
 router.get('/', async (req, res) => {
     const array =  await svc.getAllAsync()

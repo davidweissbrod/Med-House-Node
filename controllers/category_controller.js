@@ -1,4 +1,4 @@
-import CategoryService from '../service/category_service'
+import CategoryService from '../service/category_service.js'
 import express from 'express'
 const svc = new CategoryService();
 const router = express.Router();

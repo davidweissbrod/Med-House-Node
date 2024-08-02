@@ -1,12 +1,5 @@
-import SQL_Helper from '../helpers/sql-helper'
+import SQL_Helper from '../helpers/sql-helper.js'
 const helpBD = new SQL_Helper();
-let obj = {
-    success: false,
-    status: 0,
-    message: "",
-    datos: null
-}
-
 
 export default class CategoryRepository{
     async getCategoryById(id) {

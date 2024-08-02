@@ -1,7 +1,7 @@
-import FarmRepository from '../repositories/farm_repository';
-import Helper from '../helpers/sql-helper'
-import validacion from "../helpers/validaciones";
-import jwt from '../middlewares/auth_middleware'
+import FarmRepository from '../repositories/farm_repository.js';
+import Helper from '../helpers/sql-helper.js'
+import validacion from "../helpers/validaciones.js";
+import jwt from '../middlewares/auth_middleware.js'
 const repo = new FarmRepository();
 const SQLHelper = new Helper();
 const val = new validacion();

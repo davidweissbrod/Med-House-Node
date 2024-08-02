@@ -1,6 +1,6 @@
-import MedicamentoRepository from "../repositories/meds_repository";
-import CategoryService from '../service/category_service'
-import SQL_Helper from '../helpers/sql-helper'
+import MedicamentoRepository from "../repositories/meds_repository.js";
+import CategoryService from '../service/category_service.js'
+import SQL_Helper from '../helpers/sql-helper.js'
 const repo = new MedicamentoRepository();
 const helper = new SQL_Helper();
 
