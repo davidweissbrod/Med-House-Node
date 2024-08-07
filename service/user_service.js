@@ -85,7 +85,6 @@ export default class UsuarioService{
     }
 
     updateUser = async (us) => {
-        const validatedUser = this.updateUser(us)
             try {
                 const rowCount = await repo.updateUser(us);
                 if (rowCount > 0) {

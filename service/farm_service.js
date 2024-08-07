@@ -8,7 +8,7 @@ const val = new validacion();
 let obj = {
     success: false,
     message: "",
-    token: ""
+    datos: null
 }
 export default class FarmaceuticoService{
     async getFarmaceuticoById(id){

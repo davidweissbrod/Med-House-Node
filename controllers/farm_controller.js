@@ -37,7 +37,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Farm Login
-router.post('/api/farmaceutico/login', auth.authMiddleware, async (req, res) => {
+router.post('/login', auth.authMiddleware, async (req, res) => {
     let ret; 
     const array = await svc.login(req.body.dni, req.body.constraseña)
     if(array.success){   
@@ -49,7 +49,7 @@ router.post('/api/farmaceutico/login', auth.authMiddleware, async (req, res) => 
 })
 
 // Farm Register
-router.post('api/user/resgister', auth.authMiddleware, async (req, res) => {
+router.post('/register', auth.authMiddleware, async (req, res) => {
     let ret = await svc.register(new Farmaceutico (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.titulo, req.body.constraseña, req.body.email, req.body.genero, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.telefono))
     if(ret){
         ret = res.status(201).send('Creado')

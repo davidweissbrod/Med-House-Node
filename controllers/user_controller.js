@@ -14,8 +14,8 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update user
-router.put('/:id', auth.authMiddleware, async (req, res) => { // Usar `:id` para especificar el usuario a actualizar
-    const array = await updateUser(req.params.id, req.body.Usuario); // Asumimos que `updateUser` necesita ID
+router.put('/:id', auth.authMiddleware, async (req, res) => { 
+    const array = await updateUser(req.params.id, req.body.Usuario); 
     return res.status(array.status).send(array.message);
 });
 
@@ -31,7 +31,7 @@ router.delete('/:id', auth.authMiddleware, async (req, res) => {
     return res.status(array.status).send(array.message);
 });
 
-// Get DNI and Password (might need to be a POST request if you're sending body data)
+// Get DNI and Password 
 router.post('/login', async (req, res) => {
     const array = await getUserByDniPassword(req.body.dni, req.body.contraseña);
     return res.status(array.status).send(array.message);
@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
 
 // Register User
 router.post('/register', async (req, res) => {
-    let ret = await svc.register(new Users(1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
+    let ret = await svc.register(new Usuario(1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
     if(ret){
         ret = res.status(201).send("Creado");
     }
