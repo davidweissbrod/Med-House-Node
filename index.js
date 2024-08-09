@@ -12,10 +12,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routers
-app.use('/Farmaceutico', FarmRouter);
-app.use('/Categorias', CategoryRouter);
-app.use('/Usuario', UserRouter);
-app.use('/Medicamento', MedsRouter);
+app.use('/farmaceutico', FarmRouter);
+app.use('/categorias', CategoryRouter);
+app.use('/usuario', UserRouter);
+app.use('/medicamento', MedsRouter);
 
 // Start the server
 app.listen(port, () => {

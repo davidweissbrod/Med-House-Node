@@ -9,31 +9,31 @@ const svc = new UserService();
 
 // Get user by ID
 router.get('/:id', async (req, res) => {
-    const array = await getUserById(req.params.id);
+    const array = await svc.getUserById(req.params.id);
     return res.status(array.status).json(array.datos);
 });
 
 // Update user
 router.put('/:id', auth.authMiddleware, async (req, res) => { 
-    const array = await updateUser(req.params.id, req.body.Usuario); 
+    const array = await svc.updateUser(req.params.id, req.body.Usuario); 
     return res.status(array.status).send(array.message);
 });
 
 // Insert User
 router.post('', async (req, res) => {
-    const array = await insertUser(req.body.Usuario);
+    const array = await svc.insertUser(req.body.Usuario);
     return res.status(array.status).json(array.datos);
 });
 
 // Delete user by ID
 router.delete('/:id', auth.authMiddleware, async (req, res) => {
-    const array = await deleteUserById(req.params.id);
+    const array = await svc.deleteUserById(req.params.id);
     return res.status(array.status).send(array.message);
 });
 
 // Get DNI and Password 
 router.post('/login', async (req, res) => {
-    const array = await getUserByDniPassword(req.body.dni, req.body.contraseña);
+    const array = await svc.getUserByDniPassword(req.body.dni, req.body.contraseña);
     return res.status(array.status).send(array.message);
 });
 

@@ -20,19 +20,19 @@ router.get('/:id', async (req, res) => {
 
 // Insert Farmaceutico
 router.post('/', async (req, res) => {
-    const array =  await insertFarmaceutico(req.body.Farmaceutico)
+    const array =  await svc.insertFarmaceutico(req.body.Farmaceutico)
     return res.status(array.status).send(array.message)
 });
 
 // Update a farmaceutico by ID
 router.put('/:id', async (req, res) => {
-    const array =  await updateFarmaceuticoById(req.params.id)
+    const array =  await svc.updateFarmaceuticoById(req.params.id)
     return res.status(array.status).send(array.message)
 });
 
 // Delete a farmaceutico by ID
 router.delete('/:id', async (req, res) => {
-    const array =  await deleteFarmaceuticoById(req.params.id)
+    const array =  await svc.deleteFarmaceuticoById(req.params.id)
     return res.status(array.status).send(array.message)
 });
 
