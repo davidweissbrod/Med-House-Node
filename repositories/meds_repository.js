@@ -2,7 +2,7 @@ import SQL_Helper from '../helpers/sql-helper.js'
 const helpBD = new SQL_Helper();
 
 export default class MedsRepository{
-    async getAll() {
+    async getAllAsync() {
         const sql = 'SELECT * FROM Medicamento';
         let res = await helpBD.SQLQuery(sql);
         return res.rows;
@@ -22,7 +22,7 @@ export default class MedsRepository{
         return res.rows;
     }
 
-    async insertMedicamento(medicamento) {
+    /*async insertMedicamento(medicamento) {
         const sql = `
             INSERT INTO Medicamento(nombre, descripcion, idCategoria, precio, stock)
             VALUES($1, $2, $3, $4, $5)
@@ -60,7 +60,7 @@ export default class MedsRepository{
         ];
         let res = await helpBD.SQLQuery(sql, values);
         return res.rowCount !== 0;
-    }
+    }*/
 
     async deleteMedicamentoById(id) {
         const sql = 'DELETE FROM Medicamento WHERE id = $1';

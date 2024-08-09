@@ -11,11 +11,10 @@ let obj = {
     datos: null
 }
 export default class MedicamentoService{
+    async getAllAsync(){
+        return await repo.getAllAsync();
+    }
     async getMedicamentoById(id){
-        const sql = 'SELECT idMedicamento FROM Medicamento WHERE idMedicamento = $1' 
-        const values = [id];
-        let rowCount =  await helper.SQLQuery(sql, values);
-        rowCount = res.rows[0].count;
         let res = await repo.getMedicamentoById(id)
         if(res.rowCount < 0){
             obj.status = 404
@@ -46,7 +45,7 @@ export default class MedicamentoService{
         return obj
     }
 
-    async insertMedicamento(med){
+    /*async insertMedicamento(med){
         //Fijarnos las validaciones despues
         try{
             const rowCount = await repo.insertMedicamento(med);
@@ -87,7 +86,7 @@ export default class MedicamentoService{
            obj.status = 404
            obj.message = 'No se encontro el medicamento para actualizar'
         }
-    }
+    }*/
 
     async deleteMedicamentoById(id) {
         try {

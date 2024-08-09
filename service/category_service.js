@@ -9,10 +9,6 @@ let obj = {
 }
 export default class CategoryService{
     async getCategoryById(id){
-        const sql = 'SELECT idCategoria FROM Categoria WHERE idCategoria = $1' 
-        const values = [id];
-        let rowCount =  await sqlHelper.SQLQuery(sql, values);
-        rowCount = res.rows[0].count;
         let res = await repo.getFarmaceuticoById(id)
         if(res.rowCount < 0){
             obj.status = 404

@@ -28,7 +28,7 @@ router.get('/categoria/:idCategoria', async (req, res) => {
     ret = res.status(array.status).send(array.message)
 });
 
-// Create a new medicamento
+/*// Create a new medicamento
 router.post('/', async (req, res) => {
     let ret;
     const array =  await svc.insertMedicamento(req.body.Medicamento)
@@ -40,7 +40,7 @@ router.put('/:id', async (req, res) => {
     let ret;
     const array =  await svc.updateMedicamento(req.params.id)
     ret = res.status(array.status).send(array.message)
-});
+});*/
 
 // Delete a medicamento by ID
 router.delete('/:id', async (req, res) => {
