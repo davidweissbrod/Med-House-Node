@@ -46,8 +46,33 @@ export default class MedicamentoService{
         return obj
     }
 
-    async insertMedicamento(medicamento){
+    async insertMedicamento(med){
         //Fijarnos las validaciones despues
+        try{
+            const rowCount = await repo.insertMedicamento(med);
+            if(rowCount > 0){
+                obj.success = true;
+                obj.status = 201;
+                obj.message = "Se ingreso el medicamento";
+                obj.datos = { rowCount };
+            } else{
+                obj.success = false;
+                obj.status = 400;
+                obj.message = "No se pudo crear";
+                obj.datos = null;
+            }
+        }catch(error){
+            if (error.code === '23503') {
+                obj.success = false;
+                obj.message = "No se pudo ingresar el medicamento";
+                obj.datos = null;
+            } else {
+                obj.success = false;
+                obj.message = "Error al ingresar el medicamento";
+                obj.datos = null;
+            }
+        }
+        
     }
 
     async updateMedicamento(medicamento){
