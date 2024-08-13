@@ -3,12 +3,12 @@ export default class Usuario{
     dni;
     nombre;
     apellido;
-    contraseña;
+    password;
     email;
-    fotoPerfil = null;
-    fechaNacimiento = null;
-    genero = null;
-    telefono = null;
+    fotoPerfil;
+    fechaNacimiento;
+    genero;
+    telefono;
 
     Usuario(idUs, dni, nom, ap, con, email, pfp, fn, genero, tel){
         this.idUsuario = idUs;

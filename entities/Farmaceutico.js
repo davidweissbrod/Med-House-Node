@@ -6,10 +6,10 @@ export default class Farmaceutico{
     titulo;
     contraseña;
     email;
-    genero = null;
-    fotoPerfil = null;
-    fechaNacimiento = null;
-    telefono = null;
+    genero;
+    fotoPerfil;
+    fechaNacimiento;
+    telefono;
 
     Farmaceutico(idFarm, dni, nom, ap, titulo, con, email, genero, pfp, fn, tel){
         this.idFarmaceutico = idFarm;

@@ -1,14 +1,14 @@
 export default class Request{
     idRequest;
     idUsuario;
-    idFarmaceutico = null;
+    idFarmaceutico;
     idMedicamento;
-    estado = null; //En proceso
+    estado; //En proceso
     descripcion;
     fechaCaducidad;
-    fechaApertura = null;
-    cantidad = null;
-    comentario = null;
+    fechaApertura;
+    cantidad;
+    comentario;
 
     Request(idReq, idUs, idFarm, idMed, estado, desc, fCaducidad, fAp, cant, comentario){
         this.idRequest = idReq;

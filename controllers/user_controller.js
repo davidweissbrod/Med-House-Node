@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
 
 // Register User
 router.post('/register', async (req, res) => {
-    let ret = await svc.register(new Usuario(1, req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
+    let ret = await svc.register(new Usuario(req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
     if(ret){
         ret = res.status(201).send("Creado");
     }
