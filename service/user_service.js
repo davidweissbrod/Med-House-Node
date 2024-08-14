@@ -45,9 +45,8 @@ export default class UsuarioService{
                     dni: usuario.dni,
                     contraseña: usuario.password
                 };
-                console.log('payload', payload)
                 const options = {
-                    expiresIn: '1h',
+                    expiresIn: '5h',
                 };
                 const token = jwt.sign(payload, 'MedHouse', options);
                 respuesta.success = true;

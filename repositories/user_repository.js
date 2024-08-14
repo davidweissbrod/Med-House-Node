@@ -56,10 +56,30 @@ export default class UserRepository {
             return false;
         }
     }
-    async getUserByDniPassword(dni, contraseña){
-        const sql = 'SELECT * FROM Usuario WHERE dni = $1 AND contraseña = $2'
-        const values = [dni, contraseña]
-        let res = await helpBD.SQLQuery(sql, values)
-        return res.rows[0]
-    }
+    async getUserByDniPassword(dni, contraseña) {
+        const sql = `
+            SELECT * FROM Usuario WHERE DNI = @dni AND Contraseña = @contraseña;
+        `;
+        
+        // Crear un objeto de parámetros
+        const params = {
+            dni: dni,
+            contraseña: contraseña
+        };
+        
+        try {
+            // Ejecutar la consulta
+            let res = await helpBD.SQLQuery(sql, params);
+            
+            // Comprobar si res no es null y tiene propiedad recordset
+            if (res && res.recordset && res.recordset.length > 0) {
+                return res.recordset[0];
+            }
+            return null;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error fetching user by DNI and password:', error);
+            return null;
+        }
+    }    
 }

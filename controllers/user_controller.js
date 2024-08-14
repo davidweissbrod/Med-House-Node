@@ -31,35 +31,36 @@ router.delete('/:id', auth.authMiddleware, async (req, res) => {
     return res.status(array.status).send(array.message);
 });
 
-// Get DNI and Password 
-router.post('/login', async (req, res) => {
-    const array = await svc.getUserByDniPassword(req.body.dni, req.body.contraseña);
-    return res.status(array.status).send(array.message);
-});
-
 // Login User
-router.get('/login', auth.authMiddleware, async (req, res) => {
-    let ret; 
-    const array = await svc.login(req.body.dni, req.body.contraseña);
-    if(array.success){   
-        ret = res.status(201).json(array);
-    } else{
-        ret = res.status(400).json(array);
+router.post('/login', async (req, res) => {
+    const response = await svc.login(req.body.dni, req.body.contraseña);
+    if(response != null){
+        if(response.success){   
+            return res.status(201).json(response);
+        } 
+        else {
+            return res.status(400).json(response);
+        }
     }
-    return ret;
+    else{
+        return response.status(401).json(response);
+    }
 });
 
 // Register User
 router.post('/register', async (req, res) => {
-    console.log(req.body);
     let response = await svc.register(req.body);
-    if(response){
-        response = res.status(201).send(response);
+    if(response != null){
+        if(response.success){   
+            return res.status(201).json(response);
+        } 
+        else {
+            return res.status(400).json(response);
+        }
     }
     else{
-        response = res.status(400).send(response);
+        return response.status(401).json(response);
     }
-    return response;
 });
 
 // Validar Token
