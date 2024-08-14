@@ -15,7 +15,7 @@ export default class Usuario{
         this.dni = dni;
         this.nombre = nom;
         this.apellido = ap;
-        this.contraseña = con;
+        this.password = con;
         this.email = email; 
         this.fotoPerfil = pfp;
         this.fechaNacimiento = fn;

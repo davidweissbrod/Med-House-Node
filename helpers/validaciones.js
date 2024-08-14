@@ -7,16 +7,16 @@ export default class validacion{
         return valido
     }
     
-    emailValidation(correo){
+    emailValidation(email){
         const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        return regex.test(correo);
+        return regex.test(email);
     }
     
     getValidatedDni(dni){
         if(dni < 7 || dni > 8){
-            return false
+            return true
         }
-        return true
+        return false
     }
     
 }

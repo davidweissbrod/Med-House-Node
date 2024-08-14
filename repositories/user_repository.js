@@ -26,14 +26,35 @@ export default class UserRepository {
         }
         return false;    
     }
-    async insertUser(user){
-        const sql = 'INSERT Usuario(dni, nombre, apellido, contraseña, email, fotoPerfil, fechaNacimiento, genero, telefono) VALUES($1,$2,$3, $4, $5, $6, $7, $8,  $9)'
-        const values = [user.dni, user.nombre, user.contraseña, user.email, user.fotoPerfil, user.fechaNacimiento, user.genero, user.telefono]
-        let res = await helpBD.SQLQuery(sql, values)
-        if(res.rowCount != 0){
-            return true
+    async insertUser(user) {
+        const sql = `
+            INSERT INTO Usuario (DNI, Nombre, Apellido, Contraseña, Email)
+            VALUES (@dni, @nombre, @apellido, @contraseña, @email);
+        `;
+    
+        // Crear un objeto de parámetros
+        const params = {
+            dni: user.dni,
+            nombre: user.nombre,
+            apellido: user.apellido,
+            contraseña: user.password,
+            email: user.email
+        };
+        
+        try {
+            // Ejecutar la consulta
+            let res = await helpBD.SQLQuery(sql, params);
+            
+            // Comprobar si res no es null y tiene propiedad rowsAffected
+            if (res && res.rowsAffected && res.rowsAffected[0] > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error inserting user:', error);
+            return false;
         }
-        return false
     }
     async getUserByDniPassword(dni, contraseña){
         const sql = 'SELECT * FROM Usuario WHERE dni = $1 AND contraseña = $2'

@@ -1,7 +1,7 @@
 const config = {
-    user: 'david',
-    password: 'david',
-    server: 'DESKTOP-ASI1O01',
+    user: 'alumno',
+    password: 'alumno',
+    server: 'localhost',
     database: 'med-house',
     options: {
         trustServerCertificate: true,

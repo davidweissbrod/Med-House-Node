@@ -37,18 +37,6 @@ router.post('/login', async (req, res) => {
     return res.status(array.status).send(array.message);
 });
 
-// Register User
-router.post('/register', async (req, res) => {
-    let ret = await svc.register(new Usuario(req.body.dni, req.body.nombre, req.body.apellido, req.body.contraseña, req.body.email));
-    if(ret){
-        ret = res.status(201).send("Creado");
-    }
-    else{
-        ret = res.status(400).send(respuesta);
-    }
-    return ret;
-});
-
 // Login User
 router.get('/login', auth.authMiddleware, async (req, res) => {
     let ret; 
@@ -59,6 +47,19 @@ router.get('/login', auth.authMiddleware, async (req, res) => {
         ret = res.status(400).json(array);
     }
     return ret;
+});
+
+// Register User
+router.post('/register', async (req, res) => {
+    console.log(req.body);
+    let response = await svc.register(req.body);
+    if(response){
+        response = res.status(201).send(response);
+    }
+    else{
+        response = res.status(400).send(response);
+    }
+    return response;
 });
 
 // Validar Token

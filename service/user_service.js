@@ -70,18 +70,29 @@ export default class UsuarioService{
     };
 
     register = async (user) => {
+        let respuesta = {
+            success: false,
+            message: ""
+        };
+
         const repo = new UserRepository();
-        let ret;
-        if (val.getValidatedDni(user.dni)){       
-            ret = "El DNI es invalido";
+
+        if (!val.getValidatedDni(user.dni)){       
+            respuesta.message = "El DNI es invalido";
         }
-        else if (val.emailValidation(user.email)){
-            ret = "El Email no es valido";
+        else if (!val.emailValidation(user.email)){
+            respuesta.message = "El Email no es valido";
         }
         else{
-            ret = repo.insertUser(user);
+            const success = await repo.insertUser(user);
+            if(success){
+                respuesta.success = true;
+                respuesta.message = "Usuario creado exitosamente";
+            } else{
+                respuesta.message = "Error al crear el usuario";
+            }
         }
-        return ret;
+        return respuesta;
     }
 
     updateUser = async (us) => {
@@ -135,6 +146,7 @@ export default class UsuarioService{
         }
         return obj;
     };
+
     getUserByDniPassword = async(dni, password) => {
         let res = await repo.getUserByDniPassword(dni, password)
         if(res.rowCount < 0){
