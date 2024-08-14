@@ -8,24 +8,68 @@ export default class UserRepository {
         let res = await helpBD.SQLQuery(sql, values)
         return res.rows[0]
     }
-    async updateUser(user){
-        const sql = 'UPDATE Usuario SET dni = $1, nombre = $2, apellido = $3, contraseña = $4, email = $5, fotoPerfil = $6, fechaNacimiento = $7, genero = $8, telefono = $9 WHERE idUsuario = $10'
-        const values = [user.dni, user.nombre, user.apellido, user.contraseña, user.email, user.fotoPerfil, user.fechaNacimiento, user.genero, user.telefono, id]
-        let res = await helpBD.SQLQuery(sql, values)
-        if(res.rowCount != 0){
-            return true;
+    async updateUser(user) {
+        const sql = `
+            UPDATE Usuario
+            SET DNI = @dni, Nombre = @nombre, Apellido = @apellido, Contraseña = @contraseña, Email = @email, 
+                fotoDePerfil = @fotoPerfil, fechaNacimiento = @fechaNacimiento, Genero = @genero, Telefono = @telefono
+            WHERE idUsuario = @idUsuario;
+        `;
+        
+        // Crear un objeto de parámetros
+        const params = {
+            idUsuario: user.idUsuario,
+            dni: user.dni,
+            nombre: user.nombre,
+            apellido: user.apellido,
+            contraseña: user.contraseña,
+            email: user.email,
+            fotoPerfil: user.fotoPerfil,
+            fechaNacimiento: user.fechaNacimiento,
+            genero: user.genero,
+            telefono: user.telefono
+        };
+        
+        try {
+            // Ejecutar la consulta
+            let res = await helpBD.SQLQuery(sql, params);
+            
+            // Comprobar si res no es null y tiene propiedad rowsAffected
+            if (res && res.rowsAffected && res.rowsAffected[0] > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error updating user:', error);
+            return false;
         }
-        return false;   
-    }
-    async deleteUserById(id){
-        const sql = 'DELETE Usuario WHERE idUsuario = $1'
-        const values = [id]
-        let res = await helpBD.SQLQuery(sql, values)
-        if(res.rowCount != 0){
-            return true;
+    }    
+    async deleteUserById(id) {
+        const sql = `
+            DELETE FROM Usuario WHERE idUsuario = @idUsuario;
+        `;
+        
+        // Crear un objeto de parámetros
+        const params = {
+            idUsuario: id
+        };
+        
+        try {
+            // Ejecutar la consulta
+            let res = await helpBD.SQLQuery(sql, params);
+            
+            // Comprobar si res no es null y tiene propiedad rowsAffected
+            if (res && res.rowsAffected && res.rowsAffected[0] > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error deleting user:', error);
+            return false;
         }
-        return false;    
-    }
+    }    
     async insertUser(user) {
         const sql = `
             INSERT INTO Usuario (DNI, Nombre, Apellido, Contraseña, Email)

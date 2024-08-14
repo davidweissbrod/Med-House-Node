@@ -94,57 +94,71 @@ export default class UsuarioService{
         return respuesta;
     }
 
-    updateUser = async (us) => {
-            try {
-                const rowCount = await repo.updateUser(us);
-                if (rowCount > 0) {
-                    obj.success = true;
-                    obj.message = "Se actualizo el usuario";
-                    obj.datos = { rowCount };
-                } else {
-                    obj.success = false;
-                    obj.message = "No se encontró el usuario para actualizar";
-                    obj.datos = null;
-                }
-            } catch (error) {
-                if (error.code === '23503') {
-                    obj.success = false;
-                    obj.message = "No se pudo actualizar el usuario";
-                    obj.datos = null;
-                } else {
-                    obj.success = false;
-                    obj.message = "Error al actualizar el usuario";
-                    obj.datos = null;
-                }
-            }
-            return obj
-    }
-
-    deleteUserById = async (id) => {
+    updateUser = async (us, tokenUserId) => {
+        let respuesta = {
+            success: false,
+            message: "Error al actualizar el usuario",
+            datos: null
+        };
+    
         try {
-            const rowCount = await repo.deleteUserById(id);
+            // Verifica si el usuario autenticado coincide con el usuario a actualizar
+            if (us.id !== tokenUserId) {
+                respuesta.message = "No tienes permiso para actualizar este usuario";
+                return respuesta;
+            }
+    
+            const rowCount = await repo.updateUser(us);
             if (rowCount > 0) {
-                obj.success = true;
-                obj.message = "Se elimino el usuario";
-                obj.datos = { rowCount };
+                respuesta.success = true;
+                respuesta.message = "Se actualizó el usuario";
+                respuesta.datos = { rowCount };
             } else {
-                obj.success = false;
-                obj.message = "No se encontró el usuario para eliminar";
-                obj.datos = null;
+                respuesta.message = "No se encontró el usuario para actualizar";
             }
         } catch (error) {
             if (error.code === '23503') {
-                obj.success = false;
-                obj.message = "No se pudo eliminar el usuario";
-                obj.datos = null;
+                respuesta.message = "No se pudo actualizar el usuario";
             } else {
-                obj.success = false;
-                obj.message = "Error al eliminar el usuario";
-                obj.datos = null;
+                respuesta.message = "Error al actualizar el usuario";
             }
         }
-        return obj;
-    };
+    
+        return respuesta;
+    }    
+
+    deleteUserById = async (id, tokenUserId) => {
+        let respuesta = {
+            success: false,
+            message: "Error al eliminar el usuario",
+            datos: null
+        };
+    
+        try {
+            // Verifica si el usuario autenticado coincide con el usuario a eliminar
+            if (id !== tokenUserId) {
+                respuesta.message = "No tienes permiso para eliminar este usuario";
+                return respuesta;
+            }
+    
+            const rowCount = await repo.deleteUserById(id);
+            if (rowCount > 0) {
+                respuesta.success = true;
+                respuesta.message = "Se eliminó el usuario";
+                respuesta.datos = { rowCount };
+            } else {
+                respuesta.message = "No se encontró el usuario para eliminar";
+            }
+        } catch (error) {
+            if (error.code === '23503') {
+                respuesta.message = "No se pudo eliminar el usuario";
+            } else {
+                respuesta.message = "Error al eliminar el usuario";
+            }
+        }
+    
+        return respuesta;
+    };    
 
     getUserByDniPassword = async(dni, password) => {
         let res = await repo.getUserByDniPassword(dni, password)
