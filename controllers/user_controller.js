@@ -1,6 +1,5 @@
-import UserService from '../service/user_service.js'
-import Usuario from '../entities/Usuario.js'
-import express from "express"
+import UserService from '../service/user_service.js';
+import express from "express";
 import AuthMiddleware from '../middlewares/auth_middleware.js';
 const auth = new AuthMiddleware();
 const router = express.Router();
@@ -40,9 +39,10 @@ router.post('/register', async (req, res) => {
 });
 
 // Update user
-router.put('/:id', auth.authMiddleware, async (req, res) => { 
+router.put('/', auth.authMiddleware, async (req, res) => { 
     console.log(req.body)
-    let response = await svc.updateUser(req.params.id, req.body);
+    // Llamar al servicio para actualizar el usuario
+    let response = await svc.updateUser(req.body);
     
     if (response != null) {
         if (response.success) {

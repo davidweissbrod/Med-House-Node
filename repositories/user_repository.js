@@ -22,7 +22,7 @@ export default class UserRepository {
             dni: user.dni,
             nombre: user.nombre,
             apellido: user.apellido,
-            contraseña: user.contraseña,
+            contraseña: user.password,
             email: user.email,
             fotoPerfil: user.fotoPerfil,
             fechaNacimiento: user.fechaNacimiento,

@@ -94,21 +94,23 @@ export default class UsuarioService{
         return respuesta;
     }
 
-    updateUser = async (us, tokenUserId) => {
+    updateUser = async (userInfo) => {
         let respuesta = {
             success: false,
             message: "Error al actualizar el usuario",
             datos: null
         };
-    
         try {
+            const usuario = await repo.getUserByDniPassword(userInfo.dni, userInfo.password);
+
             // Verifica si el usuario autenticado coincide con el usuario a actualizar
-            if (us.id !== tokenUserId) {
+            if (userInfo.idUsuario != usuario.idUsuario) {
                 respuesta.message = "No tienes permiso para actualizar este usuario";
                 return respuesta;
             }
     
-            const rowCount = await repo.updateUser(us);
+            // Llamar al repositorio para actualizar el usuario
+            const rowCount = await repo.updateUser(userInfo);
             if (rowCount > 0) {
                 respuesta.success = true;
                 respuesta.message = "Se actualizó el usuario";
@@ -125,7 +127,7 @@ export default class UsuarioService{
         }
     
         return respuesta;
-    }    
+    }
 
     deleteUserById = async (id, tokenUserId) => {
         let respuesta = {
