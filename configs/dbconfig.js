@@ -1,12 +1,10 @@
-const config = {
-    user: 'alumno',
-    password: 'alumno',
-    server: 'localhost',
-    database: 'med-house',
-    options: {
-        trustServerCertificate: true,
-        trustedConnection: true
-    }
-}
+import 'dotenv/config'
 
-export default config;
+const DBConfig = {
+    host      : "localhost",
+    database  : "med-house",
+    user      : "postgres",
+    password  : "root",
+    port      : 5432
+}
+export default DBConfig;

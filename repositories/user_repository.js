@@ -1,41 +1,62 @@
-import SQL_Helper from '../helpers/sql-helper.js'
-const helpBD = new SQL_Helper();
+import DBConfig from '../configs/dbconfig.js';
+import pkg from 'pg';
+const { Client } = pkg;
 
 export default class UserRepository {
-    async getUserById(id){
-        const sql = 'SELECT idUsuario FROM Usuarios WHERE idUsuario = $1'
-        const values = [id]
-        let res = await helpBD.SQLQuery(sql, values)
-        return res.rows[0]
-    }
-    async updateUser(user) {
-        const sql = `
-            UPDATE Usuario
-            SET DNI = @dni, Nombre = @nombre, Apellido = @apellido, Contraseña = @contraseña, Email = @email, 
-                fotoDePerfil = @fotoPerfil, fechaNacimiento = @fechaNacimiento, Genero = @genero, Telefono = @telefono
-            WHERE idUsuario = @idUsuario;
-        `;
-        
-        // Crear un objeto de parámetros
-        const params = {
-            idUsuario: user.idUsuario,
-            dni: user.dni,
-            nombre: user.nombre,
-            apellido: user.apellido,
-            contraseña: user.password,
-            email: user.email,
-            fotoPerfil: user.fotoPerfil,
-            fechaNacimiento: user.fechaNacimiento,
-            genero: user.genero,
-            telefono: user.telefono
-        };
+    async getUserById(id) {
+        const sql = 'SELECT id FROM usuario WHERE id = $1';
+        const client = new Client(DBConfig);
         
         try {
-            // Ejecutar la consulta
-            let res = await helpBD.SQLQuery(sql, params);
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, [id]);
             
-            // Comprobar si res no es null y tiene propiedad rowsAffected
-            if (res && res.rowsAffected && res.rowsAffected[0] > 0) {
+            // Verificar si el resultado contiene filas
+            if (result.rows.length > 0) {
+                return result.rows[0];
+            }
+            return null;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error getting user by ID:', error);
+            return null;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
+    }
+
+    async updateUser(user) {
+        const sql = `
+            UPDATE usuario
+            SET dni = $1, nombre = $2, apellido = $3, password = $4, email = $5, 
+                foto_perfil = $6, fecha_nacimiento = $7, genero = $8, telefono = $9
+            WHERE id = $10;
+        `;
+        
+        const values = [
+            user.dni,
+            user.nombre,
+            user.apellido,
+            user.password,
+            user.email,
+            user.foto_perfil,
+            user.fecha_nacimiento,
+            user.genero,
+            user.telefono,
+            user.id
+        ];
+        
+        const client = new Client(DBConfig);
+        
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            // Comprobar si se afectaron filas
+            if (result.rowCount > 0) {
                 return true;
             }
             return false;
@@ -43,24 +64,26 @@ export default class UserRepository {
             // Manejo de errores
             console.error('Error updating user:', error);
             return false;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
         }
     }    
+
     async deleteUserById(id) {
         const sql = `
-            DELETE FROM Usuario WHERE idUsuario = @idUsuario;
+            DELETE FROM usuario WHERE id = $1;
         `;
         
-        // Crear un objeto de parámetros
-        const params = {
-            idUsuario: id
-        };
+        const client = new Client(DBConfig);
         
         try {
-            // Ejecutar la consulta
-            let res = await helpBD.SQLQuery(sql, params);
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, [id]);
             
-            // Comprobar si res no es null y tiene propiedad rowsAffected
-            if (res && res.rowsAffected && res.rowsAffected[0] > 0) {
+            // Comprobar si se afectaron filas
+            if (result.rowCount > 0) {
                 return true;
             }
             return false;
@@ -68,29 +91,35 @@ export default class UserRepository {
             // Manejo de errores
             console.error('Error deleting user:', error);
             return false;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
         }
     }    
+
     async insertUser(user) {
         const sql = `
-            INSERT INTO Usuario (DNI, Nombre, Apellido, Contraseña, Email)
-            VALUES (@dni, @nombre, @apellido, @contraseña, @email);
+            INSERT INTO usuario (dni, nombre, apellido, password, email)
+            VALUES ($1, $2, $3, $4, $5);
         `;
     
-        // Crear un objeto de parámetros
-        const params = {
-            dni: user.dni,
-            nombre: user.nombre,
-            apellido: user.apellido,
-            contraseña: user.password,
-            email: user.email
-        };
+        const values = [
+            user.dni,
+            user.nombre,
+            user.apellido,
+            user.password,
+            user.email
+        ];
+        
+        const client = new Client(DBConfig);
         
         try {
-            // Ejecutar la consulta
-            let res = await helpBD.SQLQuery(sql, params);
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, values);
             
-            // Comprobar si res no es null y tiene propiedad rowsAffected
-            if (res && res.rowsAffected && res.rowsAffected[0] > 0) {
+            // Comprobar si se afectaron filas
+            if (result.rowCount > 0) {
                 return true;
             }
             return false;
@@ -98,32 +127,36 @@ export default class UserRepository {
             // Manejo de errores
             console.error('Error inserting user:', error);
             return false;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
         }
     }
-    async getUserByDniPassword(dni, contraseña) {
+
+    async getUserByDniPassword(dni, password) {
         const sql = `
-            SELECT * FROM Usuario WHERE DNI = @dni AND Contraseña = @contraseña;
+            SELECT * FROM usuario WHERE dni = $1 AND password = $2;
         `;
         
-        // Crear un objeto de parámetros
-        const params = {
-            dni: dni,
-            contraseña: contraseña
-        };
+        const client = new Client(DBConfig);
         
         try {
-            // Ejecutar la consulta
-            let res = await helpBD.SQLQuery(sql, params);
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, [dni, password]);
             
-            // Comprobar si res no es null y tiene propiedad recordset
-            if (res && res.recordset && res.recordset.length > 0) {
-                return res.recordset[0];
+            // Comprobar si el resultado contiene filas
+            if (result.rows.length > 0) {
+                return result.rows[0];
             }
             return null;
         } catch (error) {
             // Manejo de errores
             console.error('Error fetching user by DNI and password:', error);
             return null;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
         }
-    }    
+    }
 }

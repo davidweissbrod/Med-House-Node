@@ -1,5 +1,4 @@
 import UserRepository from "../repositories/user_repository.js";
-import SQLHelper from '../helpers/sql-helper.js';
 import ValidacionesHelper from '../helpers/validaciones.js';
 import jwt from 'jsonwebtoken';
 const repo = new UserRepository();
@@ -13,10 +12,6 @@ let obj = {
 
 export default class UsuarioService{
     getUserById = async(id) => {
-        const sql = 'SELECT idUsuario FROM Usuario WHERE idUsuario = $1' 
-        const values = [id];
-        let rowCount =  await SQLHelper.SQLQuery(sql, values);
-        rowCount = res.rows[0].count;
         let res = await repo.getUserById(id)
         if(res.rowCount < 0){
             obj.status = 404
@@ -94,17 +89,15 @@ export default class UsuarioService{
         return respuesta;
     }
 
-    updateUser = async (userInfo) => {
+    updateUser = async (userInfo, user) => {
         let respuesta = {
             success: false,
             message: "Error al actualizar el usuario",
             datos: null
         };
         try {
-            const usuario = await repo.getUserByDniPassword(userInfo.dni, userInfo.password);
-
             // Verifica si el usuario autenticado coincide con el usuario a actualizar
-            if (userInfo.idUsuario != usuario.idUsuario) {
+            if (userInfo.dni != user.dni) {
                 respuesta.message = "No tienes permiso para actualizar este usuario";
                 return respuesta;
             }
