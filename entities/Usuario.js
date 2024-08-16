@@ -5,8 +5,8 @@ export default class Usuario{
     apellido;
     password;
     email;
-    fotoPerfil;
-    fechaNacimiento;
+    foto_perfil;
+    fecha_nacimiento;
     genero;
     telefono;
 
@@ -17,8 +17,8 @@ export default class Usuario{
         this.apellido = ap;
         this.password = con;
         this.email = email; 
-        this.fotoPerfil = pfp;
-        this.fechaNacimiento = fn;
+        this.foto_perfil = pfp;
+        this.fecha_nacimiento = fn;
         this.genero = genero;
         this.telefono = tel;
     }

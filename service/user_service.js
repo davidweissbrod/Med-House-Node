@@ -30,7 +30,8 @@ export default class UsuarioService{
         let respuesta = {
             success: false,
             message: "Error de login",
-            token: ""
+            token: "",
+            user: ""
         };
         const repo = new UserRepository();
         if (val.getValidatedDni(dni)) {
@@ -47,6 +48,7 @@ export default class UsuarioService{
                 respuesta.success = true;
                 respuesta.message = "Login exitoso";
                 respuesta.token = token;
+                respuesta.user = usuario;
                 return respuesta;
             }
             else{
