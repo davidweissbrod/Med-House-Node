@@ -1,71 +1,85 @@
-import SQL_Helper from '../helpers/sql-helper.js'
-const helpBD = new SQL_Helper();
+import DBConfig from '../configs/dbconfig.js';
+import pkg from 'pg';
+const { Client } = pkg;
+const client = new Client(DBConfig);
 
 export default class MedsRepository{
-    async getAllAsync() {
-        const sql = 'SELECT * FROM Medicamento';
-        let res = await helpBD.SQLQuery(sql);
-        return res.rows;
+    async getAllMedicamentos() {
+        const sql = 'SELECT * FROM medicamento';
+        try {
+            await client.connect();
+            const result = await client.query(sql);
+            
+            // Verificar si el resultado contiene filas
+            if (result.rows.length > 0) {
+                return result.rows;
+            }
+            return null;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error getting meds:', error);
+            return null;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
     }
 
     async getMedicamentoById(id) {
-        const sql = 'SELECT * FROM Medicamento WHERE id = $1';
+        const sql = 'SELECT * FROM medicamento WHERE id = $1';
         const values = [id];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rows[0];
+        try {
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            if (result.rows.length > 0) {
+                return result.rows[0];
+            }
+            return null;
+        } catch (error) {
+            console.error('Error getting med by ID:', error);
+            return null;
+        } finally {
+            await client.end();
+        }
     }
 
     async getMedicamentoByCategory(idCategoria) {
-        const sql = 'SELECT * FROM Medicamento WHERE idCategoria = $1';
+        const sql = 'SELECT * FROM medicamento WHERE Id_categoria = $1';
         const values = [idCategoria];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rows;
+        try {
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            if (result.rows.length > 0) {
+                return result.rows;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error getting med:', error);
+            return null;
+        } finally {
+            await client.end();
+        }
     }
 
-    /*async insertMedicamento(medicamento) {
-        const sql = `
-            INSERT INTO Medicamento(nombre, descripcion, idCategoria, precio, stock)
-            VALUES($1, $2, $3, $4, $5)
-        `;
-        const values = [
-            medicamento.nombre,
-            medicamento.marca,
-            medicamento.dosis,
-            medicamento.formaFarm,
-            medicamento.droga,
-            medicamento.idCategoria,
-            medicamento.descripcion,
-            medicamento.stock
-        ];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rowCount !== 0;
-    }
-
-    async updateMedicamento(id, medicamento) {
-        const sql = `
-            UPDATE Medicamento
-            SET nombre = $1, descripcion = $2, idCategoria = $3, precio = $4, stock = $5
-            WHERE idMedicamento = $6
-        `;
-        const values = [
-            medicamento.nombre,
-            medicamento.marca,
-            medicamento.dosis,
-            medicamento.formaFarm,
-            medicamento.droga,
-            medicamento.idCategoria,
-            medicamento.descripcion,
-            medicamento.stock,
-            id
-        ];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rowCount !== 0;
-    }*/
 
     async deleteMedicamentoById(id) {
-        const sql = 'DELETE FROM Medicamento WHERE id = $1';
+        const sql = 'DELETE FROM medicamento WHERE id = $1';
         const values = [id];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rowCount !== 0;
+        try {
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            if (result.rowCount > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error deleting med:', error);
+            return false;
+        } finally {
+            await client.end();
+        }
     }
 }

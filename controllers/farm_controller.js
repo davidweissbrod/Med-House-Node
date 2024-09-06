@@ -6,63 +6,78 @@ const router = express.Router();
 const svc = new FarmaceuticoService();
 const auth = new AuthMiddleware();
 
-// Get all farmaceuticos
-router.get('/', async (req, res) => {
-    const array =  await svc.getAllAsync()
-    return res.status(array.status).send(array.message)
-});
-
 // Get a farmaceutico by ID
 router.get('/:id', async (req, res) => {
-    const array =  await svc.getFarmaceuticoById(req.params.id)
-    return res.status(array.status).send(array.message)
-});
-
-// Insert Farmaceutico
-router.post('/', async (req, res) => {
-    const array =  await svc.insertFarmaceutico(req.body.Farmaceutico)
-    return res.status(array.status).send(array.message)
+    let response =  await svc.getFarmaceuticoById(req.params.id)
+    if (response != null) {
+        if (response.success) {
+            return res.status(200).json(response);
+        } else {
+            return res.status(400).json(response);
+        }
+    } else {
+        return res.status(401).json(response);
+    }
 });
 
 // Update a farmaceutico by ID
-router.put('/:id', async (req, res) => {
-    const array =  await svc.updateFarmaceuticoById(req.params.id)
-    return res.status(array.status).send(array.message)
+router.put('/:id', auth.authMiddleware,async (req, res) => {
+    const array =  await svc.updateFarmaceutico(req.params.id)
+    if (response != null) {
+        if (response.success) {
+            return res.status(200).json(response);
+        } else {
+            return res.status(400).json(response);
+        }
+    } else {
+        return res.status(401).json(response);
+    }
 });
 
 // Delete a farmaceutico by ID
-router.delete('/:id', async (req, res) => {
-    const array =  await svc.deleteFarmaceuticoById(req.params.id)
-    return res.status(array.status).send(array.message)
+router.delete('/:id', auth.authMiddleware, async (req, res) => {
+    let response =  await svc.deleteFarmaceuticoById(req.params.id)
+    if (response != null) {
+        if (response.success) {
+            return res.status(200).json(response);
+        } else {
+            return res.status(400).json(response);
+        }
+    } else {
+        return res.status(401).json(response);
+    }
 });
 
 // Farm Login
 router.post('/login', auth.authMiddleware, async (req, res) => {
-    let ret; 
-    const array = await svc.login(req.body.dni, req.body.constraseña)
-    if(array.success){   
-        ret = res.status(201).json(array)
-    } else{
-        ret = res.status(400).json(array)
+    let response = await svc.login(req.body.dni, req.body.password);
+    if(response != null){
+        if(response.success){   
+            return res.status(201).json(response);
+        } 
+        else {
+            return res.status(400).json(response);
+        }
     }
-    return ret;
+    else{
+        return response.status(401).json(response);
+    }
 })
 
 // Farm Register
 router.post('/register', auth.authMiddleware, async (req, res) => {
-    let ret = await svc.register(new Farmaceutico (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.titulo, req.body.constraseña, req.body.email, req.body.genero, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.telefono))
-    if(ret){
-        ret = res.status(201).send('Creado')
-    } else{
-        ret = res.status(400).send('No se pudo crear el usuario')
+    let response = await svc.register(new Farmaceutico (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.titulo, req.body.constraseña, req.body.email, req.body.genero, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.telefono))
+    if(response != null){
+        if(response.success){   
+            return res.status(201).json(response);
+        } 
+        else {
+            return res.status(400).json(response);
+        }
     }
-    return ret
-})
-
-// Get DNI  y Contraseña
-router.get('', async (req, res) => {
-    const array = await getFarmByDniPassword(req.body.dni, req.body.contraseña)
-    return res.status(array.status).send(array.message)
+    else{
+        return response.status(401).json(response);
+    }
 })
 
 export default router;

@@ -3,7 +3,6 @@ import Helper from '../helpers/sql-helper.js'
 import validacion from "../helpers/validaciones.js";
 import jwt from '../middlewares/auth_middleware.js'
 const repo = new FarmRepository();
-const SQLHelper = new Helper();
 const val = new validacion();
 let obj = {
     success: false,
@@ -12,14 +11,10 @@ let obj = {
 }
 export default class FarmaceuticoService{
     async getFarmaceuticoById(id){
-        const sql = 'SELECT idFarmaceutico FROM Usuario WHERE idFarmaceutico = $1' 
-        const values = [id];
-        let rowCount =  await SQLHelper.SQLQuery(sql, values);
-        rowCount = res.rows[0].count;
         let res = await repo.getFarmaceuticoById(id)
         if(res.rowCount < 0){
             obj.status = 404
-            obj.message = 'No se encontro el id del farmaceutico'
+            obj.message = 'No se encontro el id'
             obj.datos = null
         } else{
             obj.status = 200,
@@ -30,30 +25,29 @@ export default class FarmaceuticoService{
         return obj
     }
 
-    async updateFarmaceutico(farmaceutico){
-            try {
-                const rowCount = await repo.updateFarmaceutico(farmaceutico);
-                if (rowCount > 0) {
-                    obj.success = true;
-                    obj.message = "Se actualizo el farmaceutico";
-                    obj.datos = { rowCount };
-                } else {
-                    obj.success = false;
-                    obj.message = "No se encontró el farmaceutico para eliminar";
-                    obj.datos = null;
-                }
-            } catch (error) {
-                if (error.code === '23503') {
-                    obj.success = false;
-                    obj.message = "No se pudo actualizar el farmaceutico";
-                    obj.datos = null;
-                } else {
-                    obj.success = false;
-                    obj.message = "Error al actualizar el farmaceutico";
-                    obj.datos = null;
-                }
+    updateFarmaceutico = async (info, user) => {
+        try {
+            if (info.dni != user.dni) {
+                obj.message = "No tienes permiso para actualizar este farmaceutico";
+                return respuesta;
             }
-            return obj
+    
+            const rowCount = await repo.updateFarmaceutico(info);
+            if (rowCount > 0) {
+                obj.success = true;
+                obj.message = "Se actualizó el farmaceutico";
+                obj.datos = { rowCount };
+            } else {
+                obj.message = "No se encontró el farmaceutico para actualizar";
+            }
+        } catch (error) {
+            if (error.code === '23503') {
+                obj.message = "No se pudo actualizar el farmaceutico";
+            } else {
+                obj.message = "Error al actualizar el farmceutico";
+            }
+        }
+        return obj;
     }
     deleteFarmaceuticoById = async (id) => {
         try {
@@ -119,31 +113,27 @@ export default class FarmaceuticoService{
     }
 
     register = async (farm) => {
-        let ret;
-        if (val.getValidatedDni(farm.dni)){       
-            ret = "El DNI es invalido";
+        let respuesta = {
+            success: false,
+            message: ""
+        };
+
+        if (!val.getValidatedDni(farm.dni)){       
+            respuesta.message = "El DNI es invalido";
         }
-        else if (val.emailValidation(farm.email)){
-            ret = "El Email no es valido";
+        else if (!val.emailValidation(farm.email)){
+            respuesta.message = "El Email no es valido";
         }
         else{
-            ret = repo.insertFarmaceutico(farm);
+            const success = await repo.insertUser(farm);
+            if(success){
+                respuesta.success = true;
+                respuesta.message = "Creado exitosamente";
+            } else{
+                respuesta.message = "Error al crear el usuario";
+            }
         }
-        return ret;
+        return respuesta;
     }
 
-    getFarmByDniPassword = async(dni, password) => {
-        let res = await repo.getFarmByDniPassword(dni, password)
-        if(res.rowCount < 0){
-            obj.status = 404
-            obj.message = 'No se encontro el farmaceutico'
-            obj.datos = null
-        } else{
-            obj.status = 200,
-            obj.message = 'Se encontro el farmaceutico'
-            obj.success = true
-            obj.datos = { rowCount }
-        }
-        return obj;
-    }
 }

@@ -1,45 +1,35 @@
-import SQL_Helper from '../helpers/sql-helper.js'
-const helpBD = new SQL_Helper();
+import DBConfig from '../configs/dbconfig.js';
+import pkg from 'pg';
+const { Client } = pkg;
+const client = new Client(DBConfig);
 
 export default class FarmRepository{
-    async getAllAsync() {
-        const sql = 'SELECT * FROM Farmaceutico';
-        let res = await helpBD.SQLQuery(sql);
-        return res.rows;
-    }
-
     async getFarmaceuticoById(id) {
-        const sql = 'SELECT * FROM Farmaceutico WHERE id = $1';
+        const sql = 'SELECT * FROM farmaceutico WHERE id = $1';
         const values = [id];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rows[0];
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            // Verificar si el resultado contiene filas
+            if (result.rows.length > 0) {
+                return result.rows[0];
+            }
+            return null;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error getting user by ID:', error);
+            return null;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
     }
 
-    async insertFarmaceutico(id, farmaceutico) {
+    async updateFarmaceutico(farmaceutico) {
         const sql = `
-            INSERT INTO Farmaceutico(dni, nombre, apellido, titulo, contraseña, email, genero, fotoPerfil, fechaNacimiento, telefono)
-            VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-        `;
-        const values = [
-            farmaceutico.dni, 
-            farmaceutico.nombre, 
-            farmaceutico.apellido, 
-            farmaceutico.titulo, 
-            farmaceutico.contraseña, 
-            farmaceutico.email, 
-            farmaceutico.genero, 
-            farmaceutico.fotoPerfil, 
-            farmaceutico.fechaNacimiento, 
-            farmaceutico.telefono,
-            id
-        ];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rowCount !== 0;
-    }
-
-    async updateFarmaceuticoById(id, farmaceutico) {
-        const sql = `
-            UPDATE Farmaceutico
+            UPDATE farmaceutico
             SET dni = $1, nombre = $2, apellido = $3, titulo = $4, contraseña = $5, email = $6, genero = $7, fotoPerfil = $8, fechaNacimiento = $9, telefono = $10
             WHERE idFarmaceutico = $11
         `;
@@ -54,23 +44,71 @@ export default class FarmRepository{
             farmaceutico.fotoPerfil, 
             farmaceutico.fechaNacimiento, 
             farmaceutico.telefono, 
-            id
+            farmaceutico.id
         ];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rowCount !== 0;
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            // Comprobar si se afectaron filas
+            if (result.rowCount > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error updating user:', error);
+            return false;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
     }
 
     async deleteFarmaceuticoById(id) {
-        const sql = 'DELETE FROM Farmaceutico WHERE id = $1';
+        const sql = 'DELETE FROM farmaceutico WHERE id = $1';
         const values = [id];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rowCount !== 0;
+        try {
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            if (result.rowCount > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            return false;
+        } finally {
+            await client.end();
+        }
     }
 
-    async getFarmaceuticoByDniPassword(dni, contraseña) {
-        const sql = 'SELECT * FROM Farmaceutico WHERE dni = $1 AND contraseña = $2';
-        const values = [dni, contraseña];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rows[0];
+    async getFarmByDniPassword(dni, password) {
+        const sql = `
+            SELECT * FROM farmaceutico WHERE dni = $1 AND password = $2;
+        `;
+        
+        const client = new Client(DBConfig);
+        
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, [dni, password]);
+            
+            // Comprobar si el resultado contiene filas
+            if (result.rows.length > 0) {
+                return result.rows[0];
+            }
+            return null;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error fetching DNI and password:', error);
+            return null;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
     }
 }

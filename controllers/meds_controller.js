@@ -9,44 +9,46 @@ const svc = new MedService();
 
 // Get all medicamentos
 router.get('/', async (req, res) => {
-    let ret;
-    const array =  await svc.getAllAsync()
-    ret = res.status(array.status).send(array.message)
+    let response = await svc.getAllMedicamentos()
+    return res.status(201).json(response)
 });
 
 // Get medicamento by ID
 router.get('/:id', async (req, res) => {
-    let ret;
-    const array =  await svc.getMedicamentosById(req.params.id)
-    ret = res.status(array.status).send(array.message)
+    let response =  await svc.getMedicamentoById(req.params.id)
+    if(response != null){
+        if(response.success){
+            return res.status(201).json(response)
+        } else {
+            return res.status(500).json({ error: 'No se pudo obtener el medicamento' });
+        }
+    } else{
+        return res.status(401).json(response)
+    }
 });
 
 // Get medicamentos by category ID
 router.get('/categoria/:idCategoria', async (req, res) => {
-    let ret;
-    const array =  await svc.getMedicamentoByCategory(req.params.id)
-    ret = res.status(array.status).send(array.message)
+    let response =  await svc.getMedicamentoByCategory(req.params.id)
+    if(response != null){
+        if(response.success){
+            return res.status(201).json(response)
+        } else {
+            return res.status(500).json({ error: 'No se pudieron obtener los medicamentos' });
+        }
+    } else{
+        return res.status(401).json(response)
+    }
 });
 
-/*// Create a new medicamento
-router.post('/', async (req, res) => {
-    let ret;
-    const array =  await svc.insertMedicamento(req.body.Medicamento)
-    ret = res.status(array.status).send(array.message)
-});
-
-// Update a medicamento by ID
-router.put('/:id', async (req, res) => {
-    let ret;
-    const array =  await svc.updateMedicamento(req.params.id)
-    ret = res.status(array.status).send(array.message)
-});*/
-
-// Delete a medicamento by ID
+// Delete a medicamento by ID / Revisar
 router.delete('/:id', async (req, res) => {
-    let ret;
-    const array =  await svc.deleteMedicamentoById(req.params.id)
-    ret = res.status(array.status).send(array.message)
+    let response = await svc.deleteMedicamentoById(req.params.id)
+    if(response.success){
+        return res.status(200).json(response)
+    } else {
+        return res.status(400).json({ error: 'No se pudieron borrar los medicamentos' });
+    }
 });
 
 export default router;
