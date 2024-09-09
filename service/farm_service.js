@@ -125,7 +125,7 @@ export default class FarmaceuticoService{
             respuesta.message = "El Email no es valido";
         }
         else{
-            const success = await repo.insertUser(farm);
+            const success = await repo.insertFarm(farm);
             if(success){
                 respuesta.success = true;
                 respuesta.message = "Creado exitosamente";

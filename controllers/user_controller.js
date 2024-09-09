@@ -6,7 +6,7 @@ const router = express.Router();
 const svc = new UserService();
 
 // Login User
-router.post('/login', async (req, res) => {
+router.post('/login', auth.authMiddleware, async (req, res) => {
     let response = await svc.login(req.body.dni, req.body.password);
 
     if(response != null){
@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
         }
     }
     else{
-        return response.status(401).json(response);
+        return res.status(401).json(response);
     }
 });
 
@@ -35,7 +35,7 @@ router.post('/register', async (req, res) => {
         }
     }
     else{
-        return response.status(401).json(response);
+        return res.status(401).json(response);
     }
 });
 

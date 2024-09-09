@@ -87,7 +87,7 @@ export default class FarmRepository{
 
     async getFarmByDniPassword(dni, password) {
         const sql = `
-            SELECT * FROM farmaceutico WHERE dni = $1 AND password = $2;
+            SELECT * FROM farmaceutico WHERE dni = $1 AND constraseña = $2;
         `;
         
         const client = new Client(DBConfig);
@@ -110,5 +110,45 @@ export default class FarmRepository{
             // Asegurarse de cerrar la conexión
             await client.end();
         }
+    }
+    async insertFarm(farm){
+        const sql = `
+        INSERT INTO usuario (dni, nombre, apellido, titulo, contraseña, email, genero, fotoPerfil, fechaNacimiento, telefono)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
+    `;
+
+    const values = [
+        farm.dni,
+        farm.nombre,
+        farm.apellido,
+        frm.titulo,
+        farm.constraseña,
+        farm.email,
+        farm.genero,
+        farm.fotoPerfil,
+        farm.fechaNacimiento,
+        farm.telefono
+    ];
+    
+    const client = new Client(DBConfig);
+    
+    try {
+        // Conectar al cliente
+        await client.connect();
+        const result = await client.query(sql, values);
+        
+        // Comprobar si se afectaron filas
+        if (result.rowCount > 0) {
+            return true;
+        }
+        return false;
+    } catch (error) {
+        // Manejo de errores
+        console.error('Error inserting farm:', error);
+        return false;
+    } finally {
+        // Asegurarse de cerrar la conexión
+        await client.end();
+    }
     }
 }

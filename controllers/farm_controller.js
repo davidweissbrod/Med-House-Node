@@ -60,7 +60,7 @@ router.post('/login', auth.authMiddleware, async (req, res) => {
         }
     }
     else{
-        return response.status(401).json(response);
+        return res.status(401).json(response);
     }
 })
 
@@ -76,7 +76,7 @@ router.post('/register', auth.authMiddleware, async (req, res) => {
         }
     }
     else{
-        return response.status(401).json(response);
+        return res.status(401).json(response);
     }
 })
 

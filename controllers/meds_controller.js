@@ -1,10 +1,8 @@
-import Medicamento from "../entities/Medicamento.js";
 import express from 'express'
 import MedService from '../service/meds_service.js'
 import AuthMiddleware from "../middlewares/auth_middleware.js";
 const auth = new AuthMiddleware();
 const router = express.Router();
-const med = new Medicamento();
 const svc = new MedService();
 
 // Get all medicamentos
@@ -42,12 +40,16 @@ router.get('/categoria/:idCategoria', async (req, res) => {
 });
 
 // Delete a medicamento by ID / Revisar
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth.authMiddleware, async (req, res) => {
     let response = await svc.deleteMedicamentoById(req.params.id)
-    if(response.success){
-        return res.status(200).json(response)
-    } else {
-        return res.status(400).json({ error: 'No se pudieron borrar los medicamentos' });
+    if(response != null){
+        if(response.success){
+            return res.status(200).json(response)
+        } else {
+            return res.status(400).json({ error: 'No se pudieron borrar los medicamentos' });
+        }
+    } else{
+        return res.status(401).json(response)
     }
 });
 
