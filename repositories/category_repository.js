@@ -1,11 +1,28 @@
-import SQL_Helper from '../helpers/sql-helper.js'
-const helpBD = new SQL_Helper();
+import DBConfig from '../configs/dbconfig.js';
+import pkg from 'pg';
+const { Client } = pkg;
+const client = new Client(DBConfig);
 
 export default class CategoryRepository{
     async getCategoryById(id) {
         const sql = 'SELECT * FROM Categoria WHERE id = $1';
         const values = [id];
-        let res = await helpBD.SQLQuery(sql, values);
-        return res.rows[0];
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            if (result.rows.length > 0) {
+                return result.rows[0];
+            }
+            return null;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error getting category by ID:', error);
+            return null;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
     }
 }

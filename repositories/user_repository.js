@@ -145,7 +145,6 @@ export default class UserRepository {
             await client.connect();
             const result = await client.query(sql, [dni, password]);
             
-            // Comprobar si el resultado contiene filas
             if (result.rows.length > 0) {
                 return result.rows[0];
             }
