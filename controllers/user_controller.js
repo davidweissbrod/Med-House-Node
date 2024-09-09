@@ -6,7 +6,7 @@ const router = express.Router();
 const svc = new UserService();
 
 // Login User
-router.post('/login', auth.authMiddleware, async (req, res) => {
+router.post('/login', async (req, res) => {
     let response = await svc.login(req.body.dni, req.body.password);
 
     if(response != null){
