@@ -6,7 +6,7 @@ const client = new Client(DBConfig);
 export default class CategoryRepository{
 
     async getAllCategories(){
-        const sql = 'SELECT * FROM Categoria'
+        const sql = 'SELECT * FROM public.categoria'
         try {
             await client.connect();
             const result = await client.query(sql);
@@ -26,7 +26,7 @@ export default class CategoryRepository{
     }
 
     async getCategoryById(id) {
-        const sql = 'SELECT * FROM Categoria WHERE id = $1';
+        const sql = 'SELECT * FROM public.categoria WHERE id = $1';
         const values = [id];
         try {
             // Conectar al cliente

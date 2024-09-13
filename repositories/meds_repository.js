@@ -5,12 +5,10 @@ const client = new Client(DBConfig);
 
 export default class MedsRepository{
     async getAllMedicamentos() {
-        const sql = 'SELECT * FROM medicamento';
+        const sql = 'SELECT * FROM public.medicamento';
         try {
             await client.connect();
             const result = await client.query(sql);
-            
-            // Verificar si el resultado contiene filas
             if (result.rows.length > 0) {
                 return result.rows;
             }
@@ -26,7 +24,7 @@ export default class MedsRepository{
     }
 
     async getMedicamentoById(id) {
-        const sql = 'SELECT * FROM medicamento WHERE id = $1';
+        const sql = 'SELECT * FROM public.medicamento WHERE id = $1';
         const values = [id];
         try {
             await client.connect();
@@ -45,7 +43,7 @@ export default class MedsRepository{
     }
 
     async getMedicamentoByCategory(idCategoria) {
-        const sql = 'SELECT * FROM medicamento WHERE Id_categoria = $1';
+        const sql = 'SELECT * FROM public.medicamento WHERE Id_categoria = $1';
         const values = [idCategoria];
         try {
             await client.connect();
@@ -65,7 +63,7 @@ export default class MedsRepository{
 
 
     async deleteMedicamentoById(id) {
-        const sql = 'DELETE FROM medicamento WHERE id = $1';
+        const sql = 'DELETE FROM public.medicamento WHERE id = $1';
         const values = [id];
         try {
             await client.connect();
@@ -79,6 +77,29 @@ export default class MedsRepository{
             console.error('Error deleting med:', error);
             return false;
         } finally {
+            await client.end();
+        }
+    }
+
+    async getMedicamentosByDroga(droga){
+        const sql = "SELECT Id, Nombre, Descripcion, Stock FROM public.medicamento"
+        const values = [droga]
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            // Comprobar si se afectaron filas
+            if (result.rowCount > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error getting med:', error);
+            return false;
+        } finally {
+            // Asegurarse de cerrar la conexión
             await client.end();
         }
     }

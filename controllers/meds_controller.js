@@ -18,7 +18,7 @@ router.get('/:id', async (req, res) => {
         if(response.success){
             return res.status(201).json(response)
         } else {
-            return res.status(500).json({ error: 'No se pudo obtener el medicamento' });
+            return res.status(500).json(response.message);
         }
     } else{
         return res.status(401).json(response)
@@ -32,7 +32,7 @@ router.get('/categoria/:idCategoria', async (req, res) => {
         if(response.success){
             return res.status(201).json(response)
         } else {
-            return res.status(500).json({ error: 'No se pudieron obtener los medicamentos' });
+            return res.status(500).json(response.message);
         }
     } else{
         return res.status(401).json(response)
@@ -46,12 +46,26 @@ router.delete('/:id', auth.authMiddleware, async (req, res) => {
         if(response.success){
             return res.status(200).json(response)
         } else {
-            return res.status(400).json({ error: 'No se pudieron borrar los medicamentos' });
+            return res.status(400).json(response.message);
         }
     } else{
         return res.status(401).json(response)
     }
 });
+
+//Get medicamento by droga
+router.get('/medicamento/:droga', async (req, res) => {
+    let response = await svc.getMedicamentosByDroga(req.params.droga)
+    if(response != null){
+        if(response.success){
+            return res.status(200).json(response)
+        } else{
+            return res.status(500).json(response.message)
+        }
+    } else{
+        return res.status(401).json(response)
+    }
+})
 
 export default router;
 
