@@ -2,7 +2,37 @@
 CREATE TABLE public.categorias (
     Id serial4 NOT NULL,
     Nombre varchar NOT NULL,
+    Cd_time int NOT NULL,
     CONSTRAINT "PK_Categorias" PRIMARY KEY (Id)
+);
+
+CREATE TABLE public.cooldowns (
+    Fecha_termina date NOT NULL,
+    Id_categoria int NOT NULL,
+    Id_usuario int NOT NULL,
+    CONSTRAINT FK_Cooldowns_Categoria FOREIGN KEY (Id_categoria) REFERENCES categorias (Id),
+    CONSTRAINT FK_Cooldowns_Usuario FOREIGN KEY (Id_usuario) REFERENCES usuario (Id)
+);
+
+CREATE TABLE public.bolsa (
+    Id_usuario int NOT NULL,
+    Id_medicamento int NOT NULL,
+    CONSTRAINT FK_Bolsa_Usuario FOREIGN KEY (Id_usuario) REFERENCES usuario (Id),
+    CONSTRAINT FK_Bolsa_Medicamento FOREIGN KEY (Id_medicamento) REFERENCES medicamento (Id)
+);
+
+CREATE TABLE public.historial (
+    Id serial4 NOT NULL,
+    Fecha_pedido date NOT NULL,
+    Id_usuario int NOT NULL,
+    CONSTRAINT FK_Historial_Usuario FOREIGN KEY (Id_usuario) REFERENCES usuario (Id)
+);
+
+CREATE TABLE public.detallehistorial (
+    Id_medicamento int NOT NULL,
+    Id_historial int NOT NULL,
+    CONSTRAINT FK_DetalleHistorial_Medicamento FOREIGN KEY (Id_medicamento) REFERENCES medicamento (Id),
+    CONSTRAINT FK_DetalleHistorial_Historial FOREIGN KEY (Id_historial) REFERENCES historial (Id)
 );
 
 -- Crear la tabla Farmaceutico
