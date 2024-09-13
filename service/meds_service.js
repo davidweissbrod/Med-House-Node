@@ -63,4 +63,17 @@ export default class MedicamentoService{
         }
         return obj;
     }
+
+    async getMedicamentosByDroga(droga){
+        let res = await repo.getMedicamentosByDroga(droga)
+        if(res.rowCount > 0){
+            obj.success = true;
+            obj.message = 'Se encontraron los medicamentos'
+            obj.datos = { rowCount }
+        } else{
+            obj.message = 'No se encontaron medicamentos con ese tipo de droga'
+        }
+        return obj
+    }
 }
+

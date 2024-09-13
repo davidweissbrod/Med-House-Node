@@ -5,7 +5,7 @@ const client = new Client(DBConfig);
 
 export default class FarmRepository{
     async getFarmaceuticoById(id) {
-        const sql = 'SELECT * FROM farmaceutico WHERE id = $1';
+        const sql = 'SELECT * FROM public.farmaceutico WHERE id = $1';
         const values = [id];
         try {
             // Conectar al cliente
@@ -29,7 +29,7 @@ export default class FarmRepository{
 
     async updateFarmaceutico(farmaceutico) {
         const sql = `
-            UPDATE farmaceutico
+            UPDATE public.farmaceutico
             SET dni = $1, nombre = $2, apellido = $3, titulo = $4, contraseña = $5, email = $6, genero = $7, fotoPerfil = $8, fechaNacimiento = $9, telefono = $10
             WHERE idFarmaceutico = $11
         `;
@@ -67,7 +67,7 @@ export default class FarmRepository{
     }
 
     async deleteFarmaceuticoById(id) {
-        const sql = 'DELETE FROM farmaceutico WHERE id = $1';
+        const sql = 'DELETE FROM public.farmaceutico WHERE id = $1';
         const values = [id];
         try {
             await client.connect();
@@ -87,7 +87,7 @@ export default class FarmRepository{
 
     async getFarmByDniPassword(dni, password) {
         const sql = `
-            SELECT * FROM farmaceutico WHERE dni = $1 AND constraseña = $2;
+            SELECT * FROM public.farmaceutico WHERE dni = $1 AND constraseña = $2;
         `;
         
         const client = new Client(DBConfig);
@@ -113,7 +113,7 @@ export default class FarmRepository{
     }
     async insertFarm(farm){
         const sql = `
-        INSERT INTO usuario (dni, nombre, apellido, titulo, contraseña, email, genero, fotoPerfil, fechaNacimiento, telefono)
+        INSERT INTO public.usuario (dni, nombre, apellido, titulo, contraseña, email, genero, fotoPerfil, fechaNacimiento, telefono)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
     `;
 
