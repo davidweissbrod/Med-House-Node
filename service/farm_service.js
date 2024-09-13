@@ -75,27 +75,29 @@ export default class FarmaceuticoService{
         return obj;
     };
 
-    login = async (dni, contraseña) => {
+    login = async (dni, password) => {
         let respuesta = {
             success: false,
             message: "Error de login",
-            token: ""
+            token: "",
+            user: ""
         };
+        const repo = new FarmRepository();
         if (val.getValidatedDni(dni)) {
-            const farm = await repo.getFarmByDniPassword(dni, contraseña);
+            const farm = await repo.getFarmByDniPassword(dni, password);
             if (farm != null) {
                 const payload = {
                     dni: farm.dni,
                     contraseña: farm.password
                 };
-                console.log('payload', payload)
                 const options = {
-                    expiresIn: '1h',
+                    expiresIn: '5h',
                 };
                 const token = jwt.sign(payload, 'MedHouse', options);
                 respuesta.success = true;
                 respuesta.message = "Login exitoso";
                 respuesta.token = token;
+                respuesta.user = farm;
                 return respuesta;
             }
             else{
@@ -110,25 +112,27 @@ export default class FarmaceuticoService{
             respuesta.token = "";
             return respuesta;
         }
-    }
+    };
 
-    register = async (farm) => {
+    register = async (user) => {
         let respuesta = {
             success: false,
             message: ""
         };
 
-        if (!val.getValidatedDni(farm.dni)){       
+        const repo = new FarmRepository();
+
+        if (!val.getValidatedDni(user.dni)){       
             respuesta.message = "El DNI es invalido";
         }
-        else if (!val.emailValidation(farm.email)){
+        else if (!val.emailValidation(user.email)){
             respuesta.message = "El Email no es valido";
         }
         else{
-            const success = await repo.insertFarm(farm);
+            const success = await repo.insertFarmaceutico(user);
             if(success){
                 respuesta.success = true;
-                respuesta.message = "Creado exitosamente";
+                respuesta.message = "Usuario creado exitosamente";
             } else{
                 respuesta.message = "Error al crear el usuario";
             }

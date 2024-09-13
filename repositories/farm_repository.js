@@ -111,9 +111,9 @@ export default class FarmRepository{
             await client.end();
         }
     }
-    async insertFarm(farm){
+    async insertFarmaceutico(farm){
         const sql = `
-        INSERT INTO public.usuario (dni, nombre, apellido, titulo, contraseña, email, genero, fotoPerfil, fechaNacimiento, telefono)
+        INSERT INTO public.farmaceutico (dni, nombre, apellido, titulo, contraseña, email, genero, fotoPerfil, fechaNacimiento, telefono)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
     `;
 
@@ -127,7 +127,8 @@ export default class FarmRepository{
         farm.genero,
         farm.fotoPerfil,
         farm.fechaNacimiento,
-        farm.telefono
+        farm.telefono,
+        farm.id
     ];
     
     const client = new Client(DBConfig);
