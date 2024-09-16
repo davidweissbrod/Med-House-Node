@@ -1,6 +1,6 @@
-import { Express } from "express";
+import Express from "express";
 import BolsaService from '../service/bolsa_service.js'
-const router = express.Router();
+const router = Express.Router();
 const svc = new BolsaService();
 
 router.get('/bolsa', async (req, res) => {
