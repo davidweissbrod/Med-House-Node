@@ -26,20 +26,21 @@ export default class BolsaRepository{
     }
 
     async updateBolsa(med){
-        const sql = 'SELECT Id_usuario FROM public.bolsa WHERE Id_usuario = $1'
-        const values = [idUser]
+        const sql = 'INSERT INTO public.bolsa VALUES = $1, $2, $3, $4, $5, $6, $7, $8'
+        const values = [med.nombre, med.marca, med.dosis, med.formaFarm, med.droga, med.idCategoria, med.descripcion, med.stock]
         try {
+            // Conectar al cliente
             await client.connect();
             const result = await client.query(sql, values);
-            // Verificar si el resultado contiene filas
-            if (result.rows.length > 0) {
-                return result.rows;
+
+            if (result.rowCount > 0) {
+                return true;
             }
-            return null;
+            return false;
         } catch (error) {
             // Manejo de errores
-            console.error('Error getting categories:', error);
-            return null;
+            console.error('Error updating user:', error);
+            return false;
         } finally {
             // Asegurarse de cerrar la conexión
             await client.end();

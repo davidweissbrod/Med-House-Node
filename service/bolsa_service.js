@@ -1,4 +1,4 @@
-import BolsaRepository from '../repositories/bolsa_repository'
+import BolsaRepository from '../repositories/bolsa_repository.js'
 const repo = new BolsaRepository();
 let obj = {
     message: "",
