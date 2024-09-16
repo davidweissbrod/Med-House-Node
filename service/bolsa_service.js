@@ -18,4 +18,16 @@ export default class BolsaService{
         }
         return obj;
     }
+
+    async updateBolsa(med){
+        const rowCount  = await repo.updateBolsa(med)
+        if(rowCount > 0){
+            obj.success = true
+            obj.message = 'Se añadio el medicamento a la bolsa'
+            obj.datos = { rowCount }
+        } else{
+            obj.message = 'No se pudo añadir el medicamento a la bolsa'
+        }
+        return obj
+    }
 }
