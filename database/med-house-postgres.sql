@@ -76,6 +76,7 @@ CREATE TABLE public.preguntas (
     Id_medicamento int NOT NULL,
     Pregunta varchar NOT NULL,
     Respuesta varchar NULL,
+    Fecha date NOT NULL,
     CONSTRAINT FK_Preguntas_Usuario FOREIGN KEY (Id_usuario) REFERENCES usuario (Id),
     CONSTRAINT FK_Preguntas_Medicamento FOREIGN KEY (Id_medicamento) REFERENCES medicamento (Id)
 );
