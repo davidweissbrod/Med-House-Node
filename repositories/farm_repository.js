@@ -87,7 +87,7 @@ export default class FarmRepository{
 
     async getFarmByDniPassword(dni, password) {
         const sql = `
-            SELECT * FROM public.farmaceutico WHERE dni = $1 AND constraseña = $2;
+            SELECT * FROM public.farmaceutico WHERE dni = $1 AND password = $2;
         `;
         
         const client = new Client(DBConfig);
@@ -113,7 +113,7 @@ export default class FarmRepository{
     }
     async insertFarmaceutico(farm){
         const sql = `
-        INSERT INTO public.farmaceutico (dni, nombre, apellido, titulo, contraseña, email, genero, fotoPerfil, fechaNacimiento, telefono)
+        INSERT INTO public.farmaceutico (dni, nombre, apellido, titulo, password, email, genero, Foto_perfil, Fecha_de_nacimiento, telefono)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);
     `;
 
@@ -121,14 +121,13 @@ export default class FarmRepository{
         farm.dni,
         farm.nombre,
         farm.apellido,
-        frm.titulo,
-        farm.constraseña,
+        farm.titulo,
+        farm.password,
         farm.email,
         farm.genero,
         farm.fotoPerfil,
         farm.fechaNacimiento,
         farm.telefono,
-        farm.id
     ];
     
     const client = new Client(DBConfig);

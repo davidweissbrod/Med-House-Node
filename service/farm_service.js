@@ -1,7 +1,7 @@
 import FarmRepository from '../repositories/farm_repository.js';
 import Helper from '../helpers/sql-helper.js'
 import validacion from "../helpers/validaciones.js";
-import jwt from '../middlewares/auth_middleware.js'
+import jwt from 'jsonwebtoken'
 const repo = new FarmRepository();
 const val = new validacion();
 let obj = {
@@ -88,7 +88,7 @@ export default class FarmaceuticoService{
             if (farm != null) {
                 const payload = {
                     dni: farm.dni,
-                    contraseña: farm.password
+                    password: farm.password
                 };
                 const options = {
                     expiresIn: '5h',
