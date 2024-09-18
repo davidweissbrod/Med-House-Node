@@ -132,7 +132,6 @@ export default class UsuarioService{
         };
     
         try {
-            // Verifica si el usuario autenticado coincide con el usuario a eliminar
             if (id !== tokenUserId) {
                 respuesta.message = "No tienes permiso para eliminar este usuario";
                 return respuesta;

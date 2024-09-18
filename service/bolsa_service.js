@@ -30,4 +30,24 @@ export default class BolsaService{
         }
         return obj
     }
+
+    async deleteMedBolsa(idMed){
+        try {
+            const rowCount = await repo.deleteMedBolsa(idMed);
+            if (rowCount > 0) {
+                obj.success = true;
+                obj.message = "Se eliminó el item";
+                obj.datos = { rowCount };
+            } else {
+                obj.message = "No se encontró el item para eliminar";
+            }
+        } catch (error) {
+            if (error.code === '23503') {
+                obj.message = "No se pudo eliminar el item";
+            } else {
+                obj.message = "Error al eliminar el item";
+            }
+        }
+        return obj
+    }
 }

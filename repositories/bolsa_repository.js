@@ -17,7 +17,7 @@ export default class BolsaRepository{
             return null;
         } catch (error) {
             // Manejo de errores
-            console.error('Error getting categories:', error);
+            console.error('Error getting bolsa:', error);
             return null;
         } finally {
             // Asegurarse de cerrar la conexión
@@ -39,11 +39,34 @@ export default class BolsaRepository{
             return false;
         } catch (error) {
             // Manejo de errores
-            console.error('Error updating user:', error);
+            console.error('Error updating bolsa:', error);
             return false;
         } finally {
             // Asegurarse de cerrar la conexión
             await client.end();
         }
     }
+
+    async deleteMedBolsa(idMed){
+        const sql = 'DELETE FROM bolsa WHERE Id_medicamento = $1'
+        const values = [idMed]
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, values);
+            
+            // Comprobar si se afectaron filas
+            if (result.rowCount > 0) {
+                return true;
+            }
+            return false;
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error deleting med from bolsa:', error);
+            return false;
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
+    }    
 }
