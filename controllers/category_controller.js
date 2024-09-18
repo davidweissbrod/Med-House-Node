@@ -9,13 +9,12 @@ router.get('/', async (req, res) => {
         if(response.success){
             return res.status(200).json(response)
         } else{
-            return res.status(400).json(response)
+            return res.status(400).json(response.message)
         }
     } else{
         return res.status(401).json(response)
     }
 })
-
 
 router.get(':/id', async (req, res) => {
     let response = await svc.getCategoryById(req.params.id)
@@ -23,7 +22,7 @@ router.get(':/id', async (req, res) => {
         if(response.success){
             return res.status(200).json(response)
         } else{
-            return res.status(400).json(response)
+            return res.status(400).json(response.message)
         }
     } else{
         return res.status(401).json(response)

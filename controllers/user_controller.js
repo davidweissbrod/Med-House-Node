@@ -14,7 +14,7 @@ router.post('/login', async (req, res) => {
             return res.status(201).json(response);
         } 
         else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     }
     else{
@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
             return res.status(201).json(response);
         } 
         else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     }
     else{
@@ -47,7 +47,7 @@ router.put('/', auth.authMiddleware, async (req, res) => {
         if (response.success) {
             return res.status(200).json(response);
         } else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     } else {
         return res.status(401).json(response);
@@ -62,7 +62,7 @@ router.delete('/:id', auth.authMiddleware, async (req, res) => {
         if (response.success) {
             return res.status(200).json(response);
         } else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     } else {
         return res.status(401).json(response);

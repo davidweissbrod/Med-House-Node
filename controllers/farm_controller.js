@@ -13,7 +13,7 @@ router.get('/:id', async (req, res) => {
         if (response.success) {
             return res.status(200).json(response);
         } else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     } else {
         return res.status(401).json(response);
@@ -41,7 +41,7 @@ router.delete('/:id', auth.authMiddleware, async (req, res) => {
         if (response.success) {
             return res.status(200).json(response);
         } else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     } else {
         return res.status(401).json(response);
@@ -49,35 +49,34 @@ router.delete('/:id', auth.authMiddleware, async (req, res) => {
 });
 
 // Farm Login
-router.post('/login', auth.authMiddleware, async (req, res) => {
+router.post('/login', async (req, res) => {
     let response = await svc.login(req.body.dni, req.body.password);
     if(response != null){
         if(response.success){   
             return res.status(201).json(response);
         } 
         else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     }
     else{
         return res.status(401).json(response);
     }
-})
-
+});
 // Farm Register
-router.post('/register', auth.authMiddleware, async (req, res) => {
-    let response = await svc.register(new Farmaceutico (1, req.body.dni, req.body.nombre, req.body.apellido, req.body.titulo, req.body.constraseña, req.body.email, req.body.genero, req.body.fotoPerfil, req.body.fechaNacimiento, req.body.telefono))
+router.post('/register', async (req, res) => {
+    let response = await svc.register(req.body);
     if(response != null){
         if(response.success){   
             return res.status(201).json(response);
         } 
         else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     }
     else{
         return res.status(401).json(response);
     }
-})
+});
 
 export default router;
