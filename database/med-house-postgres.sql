@@ -153,3 +153,5 @@ CREATE TABLE public.detallepedidos (
     CONSTRAINT FK_Detallepedidos_Medicamento FOREIGN KEY (Id_medicamento) REFERENCES medicamento (Id),
     CONSTRAINT FK_Detallepedidos_Pedidos FOREIGN KEY (Id_pedidos) REFERENCES pedidos (Id)
 );
+
+INSERT INTO public.usuario (Dni, Nombre, Apellido, password, Email) VALUES (47436792, 'Ivan', 'Joaquin', 'Pirata02!', 'ivanfejo06@gmail.com');
