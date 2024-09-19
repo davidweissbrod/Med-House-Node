@@ -5,6 +5,7 @@ import CategoryRouter from "./controllers/category_controller.js"
 import UserRouter from "./controllers/user_controller.js"
 import MedsRouter from "./controllers/meds_controller.js"
 import BolsaRouter from './controllers/bolsa_controller.js'
+import NecesitadosRouter from './controllers/necesitado_controller.js'
 
 const app = express();
 const port = 3000;
@@ -18,6 +19,7 @@ app.use('/categorias', CategoryRouter);
 app.use('/usuario', UserRouter);
 app.use('/medicamento', MedsRouter);
 app.use('/bolsa', BolsaRouter)
+app.use('/necesitados', NecesitadosRouter)
 
 // Start the server
 app.listen(port, () => {

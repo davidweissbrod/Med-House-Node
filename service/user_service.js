@@ -38,6 +38,7 @@ export default class UsuarioService{
             const usuario = await repo.getUserByDniPassword(dni, password);
             if (usuario != null) {
                 const payload = {
+                    id: usuario.id,
                     dni: usuario.dni,
                     contraseña: usuario.password
                 };
