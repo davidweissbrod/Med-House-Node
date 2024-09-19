@@ -1,47 +1,73 @@
 import MedicamentoRepository from "../repositories/meds_repository.js";
-import CategoryService from '../service/category_service.js'
+import CategoryService from '../service/category_service.js';
+
 const repo = new MedicamentoRepository();
 
 let obj = {
     success: false,
     message: "",
     datos: null
-}
-export default class MedicamentoService{
-    async getAllMedicamentos(){
-        return await repo.getAllMedicamentos();
-    }
+};
 
-    async getMedicamentoById(id){
-        let res = await repo.getMedicamentoById(id)
-        if(res.rowCount < 0){
-            obj.message = 'No se encontro el id del medicamento'
-            obj.datos = null
-        } else{
-            obj.message = 'Se encontro el medicamento'
-            obj.success = true
-            obj.datos = { rowCount }
-        }
-        return obj
-    }
-
-    async getMedicamentoByCategory(idCat){
-        const CatSvc = new CategoryService()
-        const validatedCategory = await CatSvc.getCategoryById(idCat)
-        if(validatedCategory != null){
-            let res = await repo.getMedicamentoByCategory(idCat)
-            if(res != null){
-                obj.message = 'Se encontro el medicamento con exito'
-                obj.datos = { res }
-                obj.success = true
-            } else{
-                obj.message = 'No se encontro la categoria'
-                obj.datos = { res }
+export default class MedicamentoService {
+    async getAllMedicamentos() {
+        try {
+            const res = await repo.getAllMedicamentos();
+            if (res && res.length > 0) {
+                obj.success = true;
+                obj.message = 'Se encontraron los medicamentos';
+                obj.datos = res;
+            } else {
+                obj.success = false;
+                obj.message = 'No se encontraron medicamentos';
+                obj.datos = null;
             }
-        } else{
-            obj.message = 'La categoria no existe' 
+        } catch (error) {
+            obj.message = 'Error al obtener los medicamentos';
         }
-        return obj
+        return obj;
+    }
+
+    async getMedicamentoById(id) {
+        try {
+            const res = await repo.getMedicamentoById(id);
+            if (res != null) {
+                obj.success = true;
+                obj.message = 'Se encontró el medicamento';
+                obj.datos = res;
+            } else {
+                obj.success = false;
+                obj.message = 'No se encontró el medicamento con el id proporcionado';
+                obj.datos = null;
+            }
+        } catch (error) {
+            obj.message = 'Error al obtener el medicamento';
+        }
+        return obj;
+    }
+
+    async getMedicamentoByCategory(idCat) {
+        const CatSvc = new CategoryService();
+        try {
+            const validatedCategory = await CatSvc.getCategoryById(idCat);
+            if (validatedCategory) {
+                const res = await repo.getMedicamentoByCategory(idCat);
+                if (res && res.length > 0) {
+                    obj.success = true;
+                    obj.message = 'Se encontraron los medicamentos por categoría';
+                    obj.datos = res;
+                } else {
+                    obj.success = false;
+                    obj.message = 'No se encontraron medicamentos para la categoría proporcionada';
+                    obj.datos = null;
+                }
+            } else {
+                obj.message = 'La categoría no existe';
+            }
+        } catch (error) {
+            obj.message = 'Error al obtener los medicamentos por categoría';
+        }
+        return obj;
     }
 
     async deleteMedicamentoById(id) {
@@ -49,31 +75,38 @@ export default class MedicamentoService{
             const rowCount = await repo.deleteMedicamentoById(id);
             if (rowCount > 0) {
                 obj.success = true;
-                obj.message = "Se elimino el Medicamento";
+                obj.message = 'Se eliminó el medicamento';
                 obj.datos = { rowCount };
             } else {
-                obj.message = "No se encontró el medicamento para eliminar";
+                obj.success = false;
+                obj.message = 'No se encontró el medicamento para eliminar';
+                obj.datos = null;
             }
         } catch (error) {
             if (error.code === '23503') {
-                obj.message = "No se pudo eliminar el medicamento";
+                obj.message = 'No se pudo eliminar el medicamento, posible integridad referencial';
             } else {
-                obj.message = "Error al eliminar el medicamento";
+                obj.message = 'Error al eliminar el medicamento';
             }
         }
         return obj;
     }
 
-    async getMedicamentosByDroga(droga){
-        let res = await repo.getMedicamentosByDroga(droga)
-        if(res.rowCount > 0){
-            obj.success = true;
-            obj.message = 'Se encontraron los medicamentos'
-            obj.datos = { rowCount }
-        } else{
-            obj.message = 'No se encontaron medicamentos con ese tipo de droga'
+    async getMedicamentosByDroga(droga) {
+        try {
+            const res = await repo.getMedicamentosByDroga(droga);
+            if (res && res.length > 0) {
+                obj.success = true;
+                obj.message = 'Se encontraron los medicamentos por droga';
+                obj.datos = res;
+            } else {
+                obj.success = false;
+                obj.message = 'No se encontraron medicamentos con el tipo de droga proporcionado';
+                obj.datos = null;
+            }
+        } catch (error) {
+            obj.message = 'Error al obtener los medicamentos por droga';
         }
-        return obj
+        return obj;
     }
 }
-
