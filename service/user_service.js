@@ -99,11 +99,6 @@ export default class UsuarioService{
             datos: null
         };
         try {
-            // Verifica si el usuario autenticado coincide con el usuario a actualizar
-            if (userInfo.dni != user.dni) {
-                respuesta.message = "No tienes permiso para actualizar este usuario";
-                return respuesta;
-            }
     
             // Llamar al repositorio para actualizar el usuario
             const rowCount = await repo.updateUser(userInfo);
@@ -133,8 +128,12 @@ export default class UsuarioService{
         };
     
         try {
-            if (id !== tokenUserId) {
+            console.log('ID del usuario a eliminar:', id);
+            console.log('ID del usuario autenticado:', tokenUserId);
+            if (id != tokenUserId) {
                 respuesta.message = "No tienes permiso para eliminar este usuario";
+                respuesta.success = false
+                respuesta.datos = null
                 return respuesta;
             }
     
@@ -145,12 +144,18 @@ export default class UsuarioService{
                 respuesta.datos = { rowCount };
             } else {
                 respuesta.message = "No se encontró el usuario para eliminar";
+                respuesta.success = false
+                respuesta.datos = null
             }
         } catch (error) {
             if (error.code === '23503') {
                 respuesta.message = "No se pudo eliminar el usuario";
+                respuesta.success = false
+                respuesta.datos = null
             } else {
                 respuesta.message = "Error al eliminar el usuario";
+                respuesta.success = false
+                respuesta.datos = null
             }
         }
     

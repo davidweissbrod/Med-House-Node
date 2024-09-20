@@ -48,8 +48,18 @@ export default class FarmaceuticoService{
         }
         return obj;
     }
-    deleteFarmaceuticoById = async (id) => {
+    deleteFarmaceuticoById = async (id, tokenUserId) => {
         try {
+            console.log('ID del usuario a eliminar:', id);
+            console.log('ID del usuario autenticado:', tokenUserId);
+
+            if (id != tokenUserId) {
+                obj.message = "No tienes permiso para eliminar este usuario";
+                obj.success = false
+                obj.datos = null
+                return obj;
+            }
+
             const rowCount = await repo.deleteFarmaceuticoById(id);
             if (rowCount > 0) {
                 obj.success = true;
@@ -87,7 +97,8 @@ export default class FarmaceuticoService{
             if (farm != null) {
                 const payload = {
                     dni: farm.dni,
-                    password: farm.password
+                    password: farm.password,
+                    id: farm.id
                 };
                 const options = {
                     expiresIn: '5h',
