@@ -56,7 +56,7 @@ router.put('/', auth.authMiddleware, async (req, res) => {
 
 // Delete user by ID
 router.delete('/:id', auth.authMiddleware, async (req, res) => {
-    let response = await svc.deleteUserById(req.params.id);
+    let response = await svc.deleteUserById(req.params.id, req.user.id);
 
     if (response != null) {
         if (response.success) {

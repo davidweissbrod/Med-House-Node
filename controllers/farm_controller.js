@@ -21,7 +21,7 @@ router.get('/farmaceutico/:id', async (req, res) => {
 
 // Update a farmaceutico 
 router.put('/farmaceutico', auth.authMiddleware, async (req, res) => { 
-    let response = await svc.updateFarmaceutico(req.body, req.farm);
+    let response = await svc.updateFarmaceutico(req.body, req.user);
     if (response != null) {
         if (response.success) {
             return res.status(200).json(response);
@@ -35,7 +35,7 @@ router.put('/farmaceutico', auth.authMiddleware, async (req, res) => {
 
 // Delete a farmaceutico by ID
 router.delete('/:id', auth.authMiddleware, async (req, res) => {
-    let response =  await svc.deleteFarmaceuticoById(req.params.id)
+    let response =  await svc.deleteFarmaceuticoById(req.params.id, req.user.id)
     if (response != null) {
         if (response.success) {
             return res.status(200).json(response);
