@@ -48,7 +48,7 @@ CREATE TABLE public.medicamento (
     Id_categoria int NOT NULL,
     Descripcion varchar NOT NULL,
     Stock int NOT NULL,
-    Imagen varchar NOT NULL,
+    Imagen varchar NULL,
     CONSTRAINT "PK_Medicamento" PRIMARY KEY (Id),
     CONSTRAINT FK_Medicamento_Categoria FOREIGN KEY (Id_categoria) REFERENCES categorias (Id)
 );
