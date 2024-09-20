@@ -1,8 +1,8 @@
 import DBConfig from '../configs/dbconfig.js';
 import pkg from 'pg';
-const { Client } = pkg;
+const { Pool } = pkg;
 
-const client = new Client(DBConfig);
+const pool = new Pool(DBConfig);
 
 export default class MedsRepository {
     constructor() {
@@ -11,7 +11,7 @@ export default class MedsRepository {
 
     async init() {
         try {
-            await client.connect();
+            await pool.connect();
         } catch (error) {
             console.error('Error connecting to the database:', error);
         }
@@ -20,7 +20,7 @@ export default class MedsRepository {
     async getAllMedicamentos() {
         const sql = 'SELECT * FROM public.medicamento';
         try {
-            const result = await client.query(sql);
+            const result = await pool.query(sql);
             return result.rows.length > 0 ? result.rows : null;
         } catch (error) {
             console.error('Error getting meds:', error);
@@ -32,7 +32,7 @@ export default class MedsRepository {
         const sql = 'SELECT * FROM public.medicamento WHERE id = $1';
         const values = [id];
         try {
-            const result = await client.query(sql, values);
+            const result = await pool.query(sql, values);
             return result.rows.length > 0 ? result.rows[0] : null;
         } catch (error) {
             console.error('Error getting med by ID:', error);
@@ -44,7 +44,7 @@ export default class MedsRepository {
         const sql = 'SELECT * FROM public.medicamento WHERE Id_categoria = $1';
         const values = [idCategoria];
         try {
-            const result = await client.query(sql, values);
+            const result = await pool.query(sql, values);
             return result.rows.length > 0 ? result.rows : null;
         } catch (error) {
             console.error('Error getting meds by category:', error);
@@ -56,7 +56,7 @@ export default class MedsRepository {
         const sql = 'DELETE FROM public.medicamento WHERE id = $1';
         const values = [id];
         try {
-            const result = await client.query(sql, values);
+            const result = await pool.query(sql, values);
             return result.rowCount > 0;
         } catch (error) {
             console.error('Error deleting med:', error);
@@ -68,11 +68,28 @@ export default class MedsRepository {
         const sql = 'SELECT Id, Nombre, Descripcion, Stock FROM public.medicamento WHERE Droga = $1';
         const values = [droga];
         try {
-            const result = await client.query(sql, values);
+            const result = await pool.query(sql, values);
             return result.rows.length > 0 ? result.rows : null;
         } catch (error) {
             console.error('Error getting meds by droga:', error);
             return null;
         }
+    }
+
+    async existsMedicamentoById(id) {
+        const sql = 'SELECT COUNT(*) FROM public.medicamento WHERE id = $1';
+        const values = [id];
+        try {
+            const result = await pool.query(sql, values);
+            return result.rows[0].count > 0; // Retorna true si existe, false si no
+        } catch (error) {
+            console.error('Error checking if med exists by ID:', error);
+            return false;
+        }
+    }
+
+    // Método para cerrar el pool cuando ya no se necesite
+    async close() {
+        await pool.end();
     }
 }

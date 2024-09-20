@@ -12,7 +12,7 @@ router.get('/', auth.authMiddleware, async (req, res) => {
 
     if (response != null) {
         if (response.success) {
-            return res.status(200).json(response.data);
+            return res.status(200).json(response);
         } else {
             return res.status(400).json(response.message);
         }
