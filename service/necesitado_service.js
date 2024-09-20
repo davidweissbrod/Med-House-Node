@@ -56,17 +56,12 @@ export default class NecesitadoService {
             success: false,
             message: ""
         };
-
-        if (!val.isValidId(idMedicamento)) {  // Assuming `isValidId` is a method to validate IDs
-            respuesta.message = "ID de medicamento inválido";
+        const success = await repo.removeNecesitado(userId, idMedicamento);
+        if (success) {
+            respuesta.success = true;
+            respuesta.message = "Medicamento eliminado de la lista de necesitados";
         } else {
-            const success = await repo.removeNecesitado(userId, idMedicamento);
-            if (success) {
-                respuesta.success = true;
-                respuesta.message = "Medicamento eliminado de la lista de necesitados";
-            } else {
-                respuesta.message = "Error al eliminar medicamento de la lista";
-            }
+            respuesta.message = "Error al eliminar medicamento de la lista";
         }
         return respuesta;
     };
