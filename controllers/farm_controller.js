@@ -1,13 +1,12 @@
 import FarmaceuticoService from '../service/farm_service.js'
 import express from 'express';
 import AuthMiddleware from '../middlewares/auth_middleware.js';
-import Farmaceutico from '../entities/Farmaceutico.js'
 const router = express.Router();
 const svc = new FarmaceuticoService();
 const auth = new AuthMiddleware();
 
 // Get a farmaceutico by ID
-router.get('/:id', async (req, res) => {
+router.get('/farmaceutico/:id', async (req, res) => {
     let response =  await svc.getFarmaceuticoById(req.params.id)
     if (response != null) {
         if (response.success) {
@@ -21,7 +20,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a farmaceutico 
-router.put('/', auth.authMiddleware, async (req, res) => { 
+router.put('/farmaceutico', auth.authMiddleware, async (req, res) => { 
     let response = await svc.updateFarmaceutico(req.body, req.farm);
     if (response != null) {
         if (response.success) {

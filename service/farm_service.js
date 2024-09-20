@@ -1,5 +1,4 @@
 import FarmRepository from '../repositories/farm_repository.js';
-import Helper from '../helpers/sql-helper.js'
 import validacion from "../helpers/validaciones.js";
 import jwt from 'jsonwebtoken'
 const repo = new FarmRepository();
@@ -11,8 +10,8 @@ let obj = {
 }
 export default class FarmaceuticoService{
     async getFarmaceuticoById(id){
-        let res = await repo.getFarmaceuticoById(id)
-        if(res.rowCount < 0){
+        const rowCount = await repo.getFarmaceuticoById(id)
+        if(rowCount < 0){
             obj.status = 404
             obj.message = 'No se encontro el id'
             obj.datos = null

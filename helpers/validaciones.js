@@ -18,5 +18,9 @@ export default class validacion{
         }
         return false
     }
+
+    isValidId(id, collection){
+        return collection.find(item => item.id === parseInt(id)) !== undefined;
+    }
     
 }
