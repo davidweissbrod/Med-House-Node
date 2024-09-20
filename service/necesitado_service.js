@@ -18,7 +18,7 @@ export default class NecesitadoService {
     getAllNecesitados = async (userId) => {
         let res = await repo.getAllNecesitadosByUserId(userId);
 
-        if (res.rowCount > 0) {
+        if (res.rowCount != null) {
             obj.status = 200;
             obj.message = 'Se encontraron los medicamentos necesarios';
             obj.success = true;
@@ -27,6 +27,23 @@ export default class NecesitadoService {
             obj.status = 404;
             obj.message = 'No se encontraron medicamentos necesarios';
             obj.datos = null;
+        }
+        return obj;
+    };
+
+    getNecesitadoById = async (userId, id) => {
+        let res = await repo.getNecesitadoById(userId, id);
+
+        if (!res) {
+            obj.status = 200;
+            obj.message = 'Medicamento Agregable';
+            obj.success = true;
+            obj.datos = true; // Assuming `res.rows` contains the data
+        } else {
+            obj.success = true
+            obj.status = 404;
+            obj.message = 'Medicamento ya en necesitados';
+            obj.datos = false;
         }
         return obj;
     };

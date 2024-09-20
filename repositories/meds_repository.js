@@ -88,6 +88,18 @@ export default class MedsRepository {
         }
     }
 
+    async putMedicamentoImage(imageUrl, id) {
+        const sql = 'UPDATE public.medicamento SET imagen = $1 WHERE id = $2';
+        const values = [imageUrl, id];
+        try {
+            const result = await pool.query(sql, values);
+            return result.rowCount > 0; // Retorna true si se actualizó, false si no
+        } catch (error) {
+            console.error('Error updating med image:', error);
+            return false;
+        }
+    }
+
     // Método para cerrar el pool cuando ya no se necesite
     async close() {
         await pool.end();

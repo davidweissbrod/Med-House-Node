@@ -14,7 +14,21 @@ router.get('/', auth.authMiddleware, async (req, res) => {
         if (response.success) {
             return res.status(200).json(response);
         } else {
-            return res.status(400).json(response.message);
+            return res.status(404).json(response.message);
+        }
+    } else {
+        return res.status(401).json(response.message);
+    }
+});
+
+router.get('/:id', auth.authMiddleware, async (req, res) => {
+    let response = await svc.getNecesitadoById(req.user.id, req.params.id);
+
+    if (response != null) {
+        if (response.success) {
+            return res.status(200).json(response);
+        } else {
+            return res.status(404).json(response);
         }
     } else {
         return res.status(401).json(response.message);
@@ -48,7 +62,7 @@ router.delete('/', auth.authMiddleware, async (req, res) => {
         if (response.success) {
             return res.status(200).json(response);
         } else {
-            return res.status(400).json(response.message);
+            return res.status(404).json(response.message);
         }
     } else {
         return res.status(401).json(response.message);

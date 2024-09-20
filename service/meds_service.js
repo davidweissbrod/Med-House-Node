@@ -109,4 +109,24 @@ export default class MedicamentoService {
         }
         return obj;
     }
+
+    
+
+    async putMedicamentoImage(url, id) {
+        try {
+            const res = await repo.putMedicamentoImage(url, id);
+            if (res) {
+                obj.success = true;
+                obj.message = 'Se cambio la foto del medicamento';
+                obj.datos = null;
+            } else {
+                obj.success = false;
+                obj.message = 'No se pudo cambiar la foto del medicamento';
+                obj.datos = null;
+            }
+        } catch (error) {
+            obj.message = 'Error al obtener los medicamentos por droga';
+        }
+        return obj;
+    }
 }

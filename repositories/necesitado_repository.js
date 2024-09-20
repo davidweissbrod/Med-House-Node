@@ -33,6 +33,32 @@ export default class NecesitadoRepository {
         }
     } 
 
+    async getNecesitadoById(userId, idMedicamento) {
+        const sql = `
+            SELECT *
+            FROM necesitados
+            WHERE Id_usuario = $1 AND Id_medicamento = $2;
+        `;
+        
+        const client = new Client(DBConfig);
+
+        try {
+            // Conectar al cliente
+            await client.connect();
+            const result = await client.query(sql, [userId, idMedicamento]);
+            // Verificar si se encontraron filas
+            return result.rows.length > 0; // Retorna true si se encontró el medicamento, false si no
+        } catch (error) {
+            // Manejo de errores
+            console.error('Error fetching necesitados by user ID and medication ID:', error);
+            return false; // Retorna false en caso de error
+        } finally {
+            // Asegurarse de cerrar la conexión
+            await client.end();
+        }
+    }
+    
+
     // Add a Necesitado
     async addNecesitado(userId, idMedicamento) {
         const sql = `
