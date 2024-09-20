@@ -1,8 +1,10 @@
 import NecesitadoRepository from "../repositories/necesitado_repository.js";  // Asegúrate de crear este repositorio
 import ValidacionesHelper from '../helpers/validaciones.js';
+import MedsRepository from '../repositories/meds_repository.js'
 
 const repo = new NecesitadoRepository();
 const val = new ValidacionesHelper();
+const medrepo = new MedsRepository();
 
 let obj = {
     success: false,
@@ -36,7 +38,7 @@ export default class NecesitadoService {
             message: ""
         };
 
-        if (!val.isValidId(idMedicamento)) {  // Assuming `isValidId` is a method to validate IDs
+        if (!medrepo.existsMedicamentoById(idMedicamento)) {  // Assuming `isValidId` is a method to validate IDs
             respuesta.message = "ID de medicamento inválido";
         } else {
             const success = await repo.addNecesitado(userId, idMedicamento);
@@ -57,7 +59,7 @@ export default class NecesitadoService {
             message: ""
         };
 
-        if (!val.isValidId(idMedicamento)) {  // Assuming `isValidId` is a method to validate IDs
+        if (!medrepo.existsMedicamentoById(idMedicamento)) {  // Assuming `isValidId` is a method to validate IDs
             respuesta.message = "ID de medicamento inválido";
         } else {
             const success = await repo.removeNecesitado(userId, idMedicamento);

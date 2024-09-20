@@ -6,10 +6,9 @@ export default class NecesitadoRepository {
     // Get all Necesitados for a user with detailed medication info
     async getAllNecesitadosByUserId(userId) {
         const sql = `
-            SELECT n.Id_usuario, n.Id_medicamento, m.Nombre AS medicamento_name, m.Descripcion AS medicamento_description
-            FROM necesitados n
-            JOIN medicamento m ON n.Id_medicamento = m.Id
-            WHERE n.Id_usuario = $1;
+            SELECT Id_medicamento
+            FROM necesitados
+            WHERE Id_usuario = $1;
         `;
         
         const client = new Client(DBConfig);
@@ -32,12 +31,12 @@ export default class NecesitadoRepository {
             // Asegurarse de cerrar la conexión
             await client.end();
         }
-    }    
+    } 
 
     // Add a Necesitado
     async addNecesitado(userId, idMedicamento) {
         const sql = `
-            INSERT INTO necesitados (user_id, medicamento_id)
+            INSERT INTO necesitados (id_usuario, id_medicamento)
             VALUES ($1, $2);
         `;
         
@@ -65,7 +64,7 @@ export default class NecesitadoRepository {
     // Remove a Necesitado
     async removeNecesitado(userId, idMedicamento) {
         const sql = `
-            DELETE FROM necesitados WHERE user_id = $1 AND medicamento_id = $2;
+            DELETE FROM necesitados WHERE id_usuario = $1 AND id_medicamento = $2;
         `;
         
         const values = [userId, idMedicamento];
