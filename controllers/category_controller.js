@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get(':/id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     let response = await svc.getCategoryById(req.params.id)
     if(response != null){
         if(response.success){

@@ -6,6 +6,7 @@ import UserRouter from "./controllers/user_controller.js"
 import MedsRouter from "./controllers/meds_controller.js"
 import BolsaRouter from './controllers/bolsa_controller.js'
 import NecesitadosRouter from './controllers/necesitado_controller.js'
+import BusquedaRouter from './controllers/busqueda_controller.js'
 
 const app = express();
 const port = 3000;
@@ -20,6 +21,7 @@ app.use('/usuario', UserRouter);
 app.use('/medicamento', MedsRouter);
 app.use('/bolsa', BolsaRouter)
 app.use('/necesitados', NecesitadosRouter)
+app.use('/busqueda', BusquedaRouter)
 
 // Start the server
 app.listen(port, () => {

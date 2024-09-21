@@ -5,12 +5,6 @@ const auth = new AuthMiddleware();
 const router = express.Router();
 const svc = new MedService();
 
-// Get all medicamentos
-router.get('/', async (req, res) => {
-    let response = await svc.getAllMedicamentos()
-    return res.status(201).json(response)
-});
-
 // Get medicamento by ID
 router.get('/:id', async (req, res) => {
     let response =  await svc.getMedicamentoById(req.params.id)

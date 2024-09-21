@@ -10,23 +10,6 @@ let obj = {
 };
 
 export default class MedicamentoService {
-    async getAllMedicamentos() {
-        try {
-            const res = await repo.getAllMedicamentos();
-            if (res && res.length > 0) {
-                obj.success = true;
-                obj.message = 'Se encontraron los medicamentos';
-                obj.datos = res;
-            } else {
-                obj.success = false;
-                obj.message = 'No se encontraron medicamentos';
-                obj.datos = null;
-            }
-        } catch (error) {
-            obj.message = 'Error al obtener los medicamentos';
-        }
-        return obj;
-    }
 
     async getMedicamentoById(id) {
         try {

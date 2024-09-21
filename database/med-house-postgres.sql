@@ -46,7 +46,6 @@ CREATE TABLE public.medicamento (
     Forma_farm varchar NOT NULL,
     Droga varchar NOT NULL,
     Id_categoria int NOT NULL,
-    Descripcion varchar NOT NULL,
     Stock int NOT NULL,
     Imagen varchar NULL,
     CONSTRAINT "PK_Medicamento" PRIMARY KEY (Id),
@@ -88,6 +87,14 @@ CREATE TABLE public.necesitados (
     Id_medicamento int NOT NULL,
     CONSTRAINT FK_Necesitados_Usuario FOREIGN KEY (Id_usuario) REFERENCES usuario (Id),
     CONSTRAINT FK_Necesitados_Medicamento FOREIGN KEY (Id_medicamento) REFERENCES medicamento (Id)
+);
+
+CREATE TABLE public.busqueda (
+    Id serial4 NOT NULL,
+    Id_usuario int NOT NULL,
+    Busqueda varchar NOT NULL,
+    CONSTRAINT "PK_Busqueda" PRIMARY KEY (Id),
+    CONSTRAINT FK_Busqueda_Usuario FOREIGN KEY (Id_usuario) REFERENCES usuario (Id)
 );
 
 -- Crear la tabla Prioritarios
@@ -158,5 +165,5 @@ CREATE TABLE public.detallepedidos (
 
 INSERT INTO public.usuario (Dni, Nombre, Apellido, password, Email) VALUES (47436792, 'Ivan', 'Joaquin', 'Pirata02!', 'ivanfejo06@gmail.com');
 INSERT INTO public.categorias (Nombre, cd_time) VALUES ('Analgesicos', 7);
-INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, descripcion, stock) VALUES ('Ibu 400 Ibuprofeno 400mg', 'ISA', '400mg', 'Comprimidos x10', 'Ibuprofeno', 1, 'si', 1);
-INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, descripcion, stock) VALUES ('Aspirina 500mg', 'Bayer', '500mg', 'Comprimidos x20', 'Aspirina', 1, 'si', 1);
+INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, descripcion, stock) VALUES ('Ibu 400', 'ISA', '400mg', 'Comprimidos x10', 'Ibuprofeno', 1, 'si', 1);
+INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, descripcion, stock) VALUES ('Aspirina', 'Bayer', '500mg', 'Comprimidos x20', 'Aspirina', 1, 'si', 1);
