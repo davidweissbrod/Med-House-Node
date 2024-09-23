@@ -37,7 +37,7 @@ export default class UsuarioService{
         if (val.getValidatedDni(dni)) {
             const usuario = await repo.getUserByDniPassword(dni, password);
             if (usuario != null) {
-                const payload = {
+                const payload = { 
                     id: usuario.id,
                     dni: usuario.dni,
                     contraseña: usuario.password
@@ -101,7 +101,7 @@ export default class UsuarioService{
         try {
     
             // Llamar al repositorio para actualizar el usuario
-            const rowCount = await repo.updateUser(userInfo);
+            const rowCount = await repo.updateUser(userInfo, user);
             if (rowCount > 0) {
                 respuesta.success = true;
                 respuesta.message = "Se actualizó el usuario";

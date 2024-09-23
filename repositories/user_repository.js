@@ -27,7 +27,7 @@ export default class UserRepository {
         }
     }
 
-    async updateUser(user) {
+    async updateUser(infoUser, user) {
         const sql = `
             UPDATE usuario
             SET dni = $1, nombre = $2, apellido = $3, password = $4, email = $5, 
@@ -36,15 +36,15 @@ export default class UserRepository {
         `;
         
         const values = [
-            user.dni,
-            user.nombre,
-            user.apellido,
-            user.password,
-            user.email,
-            user.foto_perfil,
-            user.fecha_nacimiento,
-            user.genero,
-            user.telefono,
+            infoUser.dni,
+            infoUser.nombre,
+            infoUser.apellido,
+            infoUser.password,
+            infoUser.email,
+            infoUser.foto_perfil,
+            infoUser.fecha_nacimiento,
+            infoUser.genero,
+            infoUser.telefono,
             user.id
         ];
         
