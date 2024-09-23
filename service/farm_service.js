@@ -24,14 +24,14 @@ export default class FarmaceuticoService{
         return obj
     }
 
-    updateFarmaceutico = async (info, id) => {
+    updateFarmaceutico = async (info, farm) => {
         try {
-            if (info.id != id) {
+            if (info.id != farm.id) {
                 obj.message = "No tienes permiso para actualizar este farmaceutico";
                 return obj;
             }
     
-            const rowCount = await repo.updateFarmaceutico(info, id);
+            const rowCount = await repo.updateFarmaceutico(info, farm);
             if (rowCount > 0) {
                 obj.success = true;
                 obj.message = "Se actualizó el farmaceutico";
