@@ -165,5 +165,5 @@ CREATE TABLE public.detallepedidos (
 
 INSERT INTO public.usuario (Dni, Nombre, Apellido, password, Email) VALUES (47436792, 'Ivan', 'Joaquin', 'Pirata02!', 'ivanfejo06@gmail.com');
 INSERT INTO public.categorias (Nombre, cd_time) VALUES ('Analgesicos', 7);
-INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, descripcion, stock) VALUES ('Ibu 400', 'ISA', '400mg', 'Comprimidos x10', 'Ibuprofeno', 1, 'si', 1);
-INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, descripcion, stock) VALUES ('Aspirina', 'Bayer', '500mg', 'Comprimidos x20', 'Aspirina', 1, 'si', 1);
+INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, stock) VALUES ('Ibu 400', 'ISA', '400mg', 'Comprimidos x10', 'Ibuprofeno', 1, 1);
+INSERT INTO public.medicamento (Nombre, Marca, dosis, forma_farm, droga, id_categoria, stock) VALUES ('Aspirina', 'Bayer', '500mg', 'Comprimidos x20', 'Aspirina', 1, 1);

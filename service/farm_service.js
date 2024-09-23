@@ -31,7 +31,7 @@ export default class FarmaceuticoService{
                 return respuesta;
             }
     
-            const rowCount = await repo.updateFarmaceutico(info);
+            const rowCount = await repo.updateFarmaceutico(info, user);
             if (rowCount > 0) {
                 obj.success = true;
                 obj.message = "Se actualizó el farmaceutico";

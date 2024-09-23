@@ -27,24 +27,24 @@ export default class FarmRepository{
         }
     }
 
-    async updateFarmaceutico(farmaceutico) {
+    async updateFarmaceutico(infoFarm, farm) {
         const sql = `
             UPDATE public.farmaceutico
             SET dni = $1, nombre = $2, apellido = $3, titulo = $4, contraseña = $5, email = $6, genero = $7, fotoPerfil = $8, fechaNacimiento = $9, telefono = $10
             WHERE idFarmaceutico = $11
         `;
         const values = [
-            farmaceutico.dni, 
-            farmaceutico.nombre, 
-            farmaceutico.apellido, 
-            farmaceutico.titulo, 
-            farmaceutico.contraseña, 
-            farmaceutico.email, 
-            farmaceutico.genero, 
-            farmaceutico.fotoPerfil, 
-            farmaceutico.fechaNacimiento, 
-            farmaceutico.telefono, 
-            farmaceutico.id
+            infoFarm.dni, 
+            infoFarm.nombre, 
+            infoFarm.apellido, 
+            infoFarm.titulo, 
+            infoFarm.contraseña, 
+            infoFarm.email, 
+            infoFarm.genero, 
+            infoFarm.fotoPerfil, 
+            infoFarm.fechaNacimiento, 
+            infoFarm.telefono, 
+            farm.id
         ];
         try {
             // Conectar al cliente
