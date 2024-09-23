@@ -28,7 +28,7 @@ export default class FarmaceuticoService{
         try {
             if (info.dni != user.dni) {
                 obj.message = "No tienes permiso para actualizar este farmaceutico";
-                return respuesta;
+                return obj;
             }
     
             const rowCount = await repo.updateFarmaceutico(info, user);
@@ -48,6 +48,7 @@ export default class FarmaceuticoService{
         }
         return obj;
     }
+    
     deleteFarmaceuticoById = async (id, tokenUserId) => {
         try {
             console.log('ID del usuario a eliminar:', id);

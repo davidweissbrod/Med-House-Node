@@ -20,7 +20,7 @@ router.get('/farmaceutico/:id', async (req, res) => {
 });
 
 // Update a farmaceutico 
-router.put('/farmaceutico', auth.authMiddleware, async (req, res) => { 
+router.put('/farmaceutico/:id', auth.authMiddleware, async (req, res) => { 
     let response = await svc.updateFarmaceutico(req.body, req.user);
     if (response != null) {
         if (response.success) {
