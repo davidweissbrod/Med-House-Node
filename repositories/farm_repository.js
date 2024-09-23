@@ -27,7 +27,7 @@ export default class FarmRepository{
         }
     }
 
-    async updateFarmaceutico(infoFarm, farm) {
+    async updateFarmaceutico(infoFarm, id) {
         const sql = `
             UPDATE public.farmaceutico
             SET dni = $1, nombre = $2, apellido = $3, titulo = $4, contraseña = $5, email = $6, genero = $7, fotoPerfil = $8, fechaNacimiento = $9, telefono = $10
@@ -44,7 +44,7 @@ export default class FarmRepository{
             infoFarm.fotoPerfil, 
             infoFarm.fechaNacimiento, 
             infoFarm.telefono, 
-            farm.id
+            id
         ];
         try {
             // Conectar al cliente

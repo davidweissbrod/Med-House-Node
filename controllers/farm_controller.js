@@ -21,12 +21,12 @@ router.get('/farmaceutico/:id', async (req, res) => {
 
 // Update a farmaceutico 
 router.put('/farmaceutico/:id', auth.authMiddleware, async (req, res) => { 
-    let response = await svc.updateFarmaceutico(req.body, req.user);
+    let response = await svc.updateFarmaceutico(req.body, req.params.id);
     if (response != null) {
         if (response.success) {
             return res.status(200).json(response);
         } else {
-            return res.status(400).json(response);
+            return res.status(400).json(response.message);
         }
     } else {
         return res.status(401).json(response);
