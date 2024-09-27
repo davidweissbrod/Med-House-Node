@@ -62,7 +62,7 @@ CREATE TABLE public.request (
     Descripcion varchar NOT NULL,
     Fecha_caducidad date NOT NULL,
     Fecha_apertura date NULL,
-    Cantidad int NULL,
+    Cantidad varchar NULL,
     Comentario varchar NULL,
     CONSTRAINT "PK_Request" PRIMARY KEY (Id),
     CONSTRAINT FK_Request_Usuario FOREIGN KEY (Id_usuario) REFERENCES usuario (Id),

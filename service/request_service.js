@@ -22,7 +22,7 @@ export default class RequestService {
             obj.status = 200;
             obj.message = 'Se encontraron las solicitudes';
             obj.success = true;
-            obj.datos = res.rows;
+            obj.datos = res;
         } else {
             obj.status = 404;
             obj.message = 'No se encontraron solicitudes';
@@ -54,7 +54,7 @@ export default class RequestService {
         let respuesta = { success: false, message: "" };
 
         // Verificar si el medicamento existe
-        let medicamentoExists = await medrepo.existsMedicamentoById(requestData.id_medicamento);
+        let medicamentoExists = await medrepo.existsMedicamentoById(requestData.medId);
         if (!medicamentoExists) {
             respuesta.message = "ID de medicamento inválido";
         } else {

@@ -50,19 +50,17 @@ export default class RequestRepository {
     // Crear una nueva solicitud
     addRequest = async (userId, requestData) => {
         const query = `
-            INSERT INTO request (id_usuario, id_farmaceutico, id_medicamento, estado, descripcion, fecha_caducidad, fecha_apertura, cantidad, comentario)
-            VALUES ($1, $2, $3, NULL, $4, $5, COALESCE($6, CURRENT_DATE), $7, $8)
+            INSERT INTO request (id_usuario, id_medicamento, descripcion, fecha_caducidad, fecha_apertura, cantidad)
+            VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING id`;
         
         const values = [
             userId,                                 // Id_usuario
-            requestData.id_farmaceutico || null,    // Id_farmaceutico (NULL si no está presente)
-            requestData.id_medicamento,             // Id_medicamento (obligatorio)
+            requestData.medId,                                  // Id_medicamento
             requestData.descripcion,                // Descripción (obligatorio)
             requestData.fecha_caducidad,            // Fecha_caducidad (obligatorio)
-            requestData.fecha_apertura || null,     // Fecha_apertura (por defecto la fecha actual si es NULL)
-            requestData.cantidad || null,           // Cantidad (NULL si no está presente)
-            requestData.comentario || null          // Comentario (NULL si no está presente)
+            requestData.fecha_apertura,             // Fecha_apertura (obligatorio)
+            requestData.cantidad,                   // Cantidad (obligatorio)
         ];
     
         const client = this.createClient();
