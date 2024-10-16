@@ -21,15 +21,19 @@ router.get('/:id', async (req, res) => {
 
 // Get medicamentos by category ID
 router.get('/categoria/:idCategoria', async (req, res) => {
-    let response =  await svc.getMedicamentoByCategory(req.params.id)
-    if(response != null){
-        if(response.success){
-            return res.status(201).json(response)
+    const { limit, offset } = req.query; // Obtener limit y offset de la query string
+    const parsedLimit = limit ? parseInt(limit) : null;
+    const parsedOffset = offset ? parseInt(offset) : null;
+
+    let response = await svc.getMedicamentoByCategory(req.params.idCategoria, parsedLimit, parsedOffset); // Pasar limit y offset
+    if (response != null) {
+        if (response.success) {
+            return res.status(200).json(response);
         } else {
             return res.status(404).json(response.message);
         }
-    } else{
-        return res.status(500).json(response)
+    } else {
+        return res.status(500).json(response);
     }
 });
 

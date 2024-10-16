@@ -29,12 +29,12 @@ export default class MedicamentoService {
         return obj;
     }
 
-    async getMedicamentoByCategory(idCat) {
+    async getMedicamentoByCategory(idCat, limit = null, offset = null) {
         const CatSvc = new CategoryService();
         try {
             const validatedCategory = await CatSvc.getCategoryById(idCat);
             if (validatedCategory) {
-                const res = await repo.getMedicamentoByCategory(idCat);
+                const res = await repo.getMedicamentoByCategory(idCat, limit, offset); // Pasar limit y offset
                 if (res && res.length > 0) {
                     obj.success = true;
                     obj.message = 'Se encontraron los medicamentos por categoría';
@@ -51,7 +51,7 @@ export default class MedicamentoService {
             obj.message = 'Error al obtener los medicamentos por categoría';
         }
         return obj;
-    }
+    }    
 
     async deleteMedicamentoById(id) {
         try {

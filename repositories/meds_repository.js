@@ -66,10 +66,25 @@ export default class MedsRepository {
     }
 
     // Obtener medicamentos por categoría
-    async getMedicamentoByCategory(idCategoria) {
+    async getMedicamentoByCategory(idCategoria, limit = null, offset = null) {
         const client = new Client(DBConfig);
-        const sql = 'SELECT * FROM public.medicamento WHERE id_categoria = $1';
+        
+        // Construir el SQL dinámicamente dependiendo de si limit y offset están definidos
+        let sql = `SELECT * FROM public.medicamento WHERE id_categoria = $1 ORDER BY stock DESC`;
         const values = [idCategoria];
+    
+        // Agregar LIMIT si está definido
+        if (limit !== null) {
+            sql += ` LIMIT $2`;
+            values.push(limit);
+        }
+        
+        // Agregar OFFSET si está definido
+        if (offset !== null) {
+            sql += limit !== null ? ` OFFSET $3` : ` OFFSET $2`; // Ajustar el índice del parámetro
+            values.push(offset);
+        }
+        
         try {
             await client.connect();
             const result = await client.query(sql, values);
@@ -80,7 +95,7 @@ export default class MedsRepository {
         } finally {
             await client.end();  // Cerrar la conexión
         }
-    }
+    }    
 
     // Eliminar un medicamento por su ID
     async deleteMedicamentoById(id) {
