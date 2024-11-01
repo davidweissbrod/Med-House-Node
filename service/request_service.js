@@ -18,7 +18,39 @@ export default class RequestService {
     getAllRequests = async (userId) => {
         let res = await repo.getAllRequestsByUserId(userId);
 
-        if (res.rowCount !== 0) {
+        if (res !== null) {
+            obj.status = 200;
+            obj.message = 'Se encontraron las solicitudes';
+            obj.success = true;
+            obj.datos = res;
+        } else {
+            obj.status = 404;
+            obj.message = 'No se encontraron solicitudes';
+            obj.datos = null;
+        }
+        return obj;
+    };
+
+    getAllFarmRequests = async (userId) => {
+        let res = await repo.getAllRequestsByFarmId(userId);
+
+        if (res !== null) {
+            obj.status = 200;
+            obj.message = 'Se encontraron las solicitudes';
+            obj.success = true;
+            obj.datos = res;
+        } else {
+            obj.status = 404;
+            obj.message = 'No se encontraron solicitudes';
+            obj.datos = null;
+        }
+        return obj;
+    };
+
+    getAllPendantRequests = async () => {
+        let res = await repo.getAllPendantRequests();
+
+        if (res !== null) {
             obj.status = 200;
             obj.message = 'Se encontraron las solicitudes';
             obj.success = true;
@@ -32,8 +64,8 @@ export default class RequestService {
     };
 
     // Obtener una solicitud específica
-    getRequestById = async (userId, requestId) => {
-        let res = await repo.getRequestById(userId, requestId);
+    getRequestById = async (requestId) => {
+        let res = await repo.getRequestById(requestId);
 
         if (res) {
             obj.status = 200;

@@ -26,10 +26,43 @@ export default class RequestRepository {
         }
     };
 
+    getAllRequestsByFarmId = async (userId) => {
+        const query = `SELECT * FROM request WHERE id_farmaceutico = $1 ORDER BY fecha_apertura DESC`;
+        const values = [userId];
+        const client = this.createClient();
+
+        try {
+            await client.connect();  // Conectar al cliente
+            const result = await client.query(query, values);
+            return result.rows;  // Devolver todas las solicitudes
+        } catch (error) {
+            console.error('Error al obtener las solicitudes: ', error);
+            return null;
+        } finally {
+            await client.end();  // Cerrar la conexión
+        }
+    };
+
+    getAllPendantRequests = async () => {
+        const query = `SELECT * FROM request WHERE estado IS NULL ORDER BY fecha_apertura DESC`;
+        const client = this.createClient();
+
+        try {
+            await client.connect();  // Conectar al cliente
+            const result = await client.query(query);
+            return result.rows;  // Devolver todas las solicitudes
+        } catch (error) {
+            console.error('Error al obtener las solicitudes: ', error);
+            return null;
+        } finally {
+            await client.end();  // Cerrar la conexión
+        }
+    };
+
     // Obtener una solicitud específica por ID
-    getRequestById = async (userId, requestId) => {
-        const query = `SELECT * FROM request WHERE id_usuario = $1 AND id = $2`;
-        const values = [userId, requestId];
+    getRequestById = async (requestId) => {
+        const query = `SELECT * FROM request WHERE id = $1`;
+        const values = [requestId];
         const client = this.createClient();
 
         try {
