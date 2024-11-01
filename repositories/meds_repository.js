@@ -4,6 +4,7 @@ const { Client } = pkg;
 
 export default class MedsRepository {
 
+    // Cambiar querys cuando cambiemos la base de datos
     async getMeds(queryString) {
         const client = new Client(DBConfig);
     
@@ -12,8 +13,8 @@ export default class MedsRepository {
             SELECT m.*, c.nombre AS categoria
             FROM public.medicamento m
             JOIN public.categorias c ON m.id_categoria = c.id
-            WHERE 1=1
-        `;
+            WHERE 1=1 
+        `; 
         
         // Descomponer el queryString en palabras clave
         const keywords = queryString.split(' ').filter(keyword => keyword.length > 0);
