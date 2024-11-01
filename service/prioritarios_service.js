@@ -31,7 +31,7 @@ export default class PrioritariosService {
 
     async postNewPrioritario(prioritario){
         try {
-            const res = await repo.postNewPrioritario(data);
+            const res = await repo.postNewPrioritario(prioritario);
             if (res) {
                 obj.success = true;
                 obj.message = 'Se creó el prioritario correctamente';

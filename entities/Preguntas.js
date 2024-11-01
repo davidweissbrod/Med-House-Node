@@ -3,6 +3,7 @@ export default class Preguntas {
     idMedicamento;
     pregunta;
     respuesta;
+    fecha;
 
     constructor(idUsuario, idMedicamento, pregunta, respuesta = null) {
         this.idUsuario = idUsuario;
