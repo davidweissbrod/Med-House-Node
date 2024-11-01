@@ -15,8 +15,26 @@ router.get('/', auth.authMiddleware, async (req, res) => {
     }
 });
 
-router.get('/:id', auth.authMiddleware, async (req, res) => {
-    let response = await svc.getRequestById(req.user.id, req.params.id);
+router.get('/farm', auth.authMiddleware, async (req, res) => {
+    let response = await svc.getAllFarmRequests(req.user.id);
+    if (response.success) {
+        return res.status(200).json(response);
+    } else {
+        return res.status(response.status).json(response.message);
+    }
+});
+
+router.get('/pendant', async (req, res) => {
+    let response = await svc.getAllPendantRequests();
+    if (response.success) {
+        return res.status(200).json(response);
+    } else {
+        return res.status(response.status).json(response.message);
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    let response = await svc.getRequestById(req.params.id);
     if (response.success) {
         return res.status(200).json(response);
     } else {
