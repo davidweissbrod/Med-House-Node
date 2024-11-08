@@ -1,4 +1,4 @@
-import PreguntaRepository from '../repositories/preguntas_repository'
+import PreguntaRepository from '../repositories/preguntas_repository.js'
 
 const repo = new PreguntaRepository();
 

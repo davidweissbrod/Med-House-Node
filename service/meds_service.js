@@ -11,6 +11,24 @@ let obj = {
 
 export default class MedicamentoService {
 
+    async getMeds() {
+        try {
+            const res = await repo.getMeds(id);
+            if (res != null) {
+                obj.success = true;
+                obj.message = 'Se encontraron los medicamentos';
+                obj.datos = res;
+            } else {
+                obj.success = false;
+                obj.message = 'No se encontraron los medicamentos';
+                obj.datos = null;
+            }
+        } catch (error) {
+            obj.message = 'Error al obtener los medicamentos';
+        }
+        return obj;
+    }
+
     async getMedicamentoById(id) {
         try {
             const res = await repo.getMedicamentoById(id);
