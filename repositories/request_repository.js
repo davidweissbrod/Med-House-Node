@@ -114,21 +114,15 @@ export default class RequestRepository {
     updateRequest = async (userId, requestData) => {
         const query = `
             UPDATE request
-            SET id_farmaceutico = $2, id_medicamento = $3, estado = $4, descripcion = $5, fecha_caducidad = $6, fecha_apertura = COALESCE($7, fecha_apertura), cantidad = $8, comentario = $9
-            WHERE id_usuario = $1 AND id = $10
+            SET id_farmaceutico = $1, estado = $2, comentario = $3
+            WHERE id = $4
             RETURNING id`;
     
         const values = [
-            userId,                                 // Id_usuario
-            requestData.id_farmaceutico || null,    // Id_farmaceutico
-            requestData.id_medicamento,             // Id_medicamento (obligatorio)
-            requestData.estado || null,             // Estado: TRUE, FALSE o NULL
-            requestData.descripcion,                // Descripción
-            requestData.fecha_caducidad,            // Fecha_caducidad (obligatorio)
-            requestData.fecha_apertura || null,     // Fecha_apertura (si no se proporciona, mantiene el valor actual)
-            requestData.cantidad || null,           // Cantidad
-            requestData.comentario || null,         // Comentario
-            requestData.id                         // Id de la solicitud a actualizar
+            userId,                         // Id_farmaceutico
+            requestData.estado,             // Estado: TRUE, FALSE o NULL
+            requestData.comentario,         // Comentario
+            requestData.id                  // Id de la solicitud a actualizar
         ];
     
         const client = this.createClient();

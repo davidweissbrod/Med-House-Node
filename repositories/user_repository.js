@@ -3,8 +3,8 @@ import pkg from 'pg';
 const { Client } = pkg;
 
 export default class UserRepository {
-    async getUserById(id) {
-        const sql = 'SELECT id FROM usuario WHERE id = $1';
+    async getNameAndSurname(id) {
+        const sql = 'SELECT Nombre, Apellido FROM usuario WHERE id = $1';
         const client = new Client(DBConfig);
         
         try {

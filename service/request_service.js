@@ -106,7 +106,7 @@ export default class RequestService {
     updateRequest = async (userId, requestData) => {
         let respuesta = { success: false, message: "" };
 
-        let requestExists = await repo.getRequestById(userId, requestData.id);
+        let requestExists = await repo.getRequestById(requestData.id);
         if (!requestExists) {
             respuesta.message = "Solicitud no encontrada";
         } else {
@@ -125,7 +125,7 @@ export default class RequestService {
     removeRequest = async (userId, idRequest) => {
         let respuesta = { success: false, message: "" };
 
-        let requestExists = await repo.getRequestById(userId, idRequest);
+        let requestExists = await repo.getRequestById(idRequest);
         if (!requestExists) {
             respuesta.message = "Solicitud no encontrada";
         } else {

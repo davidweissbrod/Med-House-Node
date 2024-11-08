@@ -5,6 +5,22 @@ const auth = new AuthMiddleware();
 const router = express.Router();
 const svc = new UserService();
 
+router.get('/:id', async (req, res) => {
+    let response = await svc.getNameAndSurname(req.params.id);
+
+    if(response != null){
+        if(response.success){   
+            return res.status(201).json(response);
+        } 
+        else {
+            return res.status(400).json(response.message);
+        }
+    }
+    else{
+        return res.status(401).json(response);
+    }
+});
+
 // Login User
 router.post('/login', async (req, res) => {
     let response = await svc.login(req.body.dni, req.body.password);
@@ -42,7 +58,6 @@ router.post('/register', async (req, res) => {
 // Update user
 router.put('/', auth.authMiddleware, async (req, res) => { 
     let response = await svc.updateUser(req.body, req.user);
-    
     if (response != null) {
         if (response.success) {
             return res.status(200).json(response);

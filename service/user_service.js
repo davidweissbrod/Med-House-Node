@@ -11,9 +11,10 @@ let obj = {
 }
 
 export default class UsuarioService{
-    getUserById = async(id) => {
-        let res = await repo.getUserById(id)
-        if(res.rowCount < 0){
+    getNameAndSurname = async(id) => {
+        let res = await repo.getNameAndSurname(id)
+        console.log(res)
+        if(res === null){
             obj.status = 404
             obj.message = 'No se encontro el id del usuario'
             obj.datos = null
@@ -21,7 +22,7 @@ export default class UsuarioService{
             obj.status = 200,
             obj.message = 'Se encontro el usuario'
             obj.success = true
-            obj.datos = { rowCount }
+            obj.datos = res
         }
         return obj
     }
