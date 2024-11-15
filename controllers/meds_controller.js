@@ -6,7 +6,7 @@ const router = express.Router();
 const svc = new MedService();
 
 
-router.get('/:id', async (req, res) => {
+router.get('/:id/meds', async (req, res) => {
     let response =  await svc.getMeds()
     if(response != null){
         if(response.success){
