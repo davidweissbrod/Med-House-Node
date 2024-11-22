@@ -26,12 +26,12 @@ export default class MedsRepository {
         // Para cada palabra clave, aplicar filtros a los campos de interés
         keywords.forEach(keyword => {
             sql += ` AND (
-                        m.nombre ILIKE $${paramIndex} OR
-                        m.marca ILIKE $${paramIndex} OR
-                        m.dosis ILIKE $${paramIndex} OR
-                        m.forma_farm ILIKE $${paramIndex} OR
-                        m.droga ILIKE $${paramIndex} OR
-                        c.nombre ILIKE $${paramIndex}
+                        m.nombre LIKE $${paramIndex} OR
+                        m.marca LIKE $${paramIndex} OR
+                        m.dosis LIKE $${paramIndex} OR
+                        m.forma_farm LIKE $${paramIndex} OR
+                        m.droga LIKE $${paramIndex} OR
+                        c.nombre LIKE $${paramIndex}
                     )`;
             values.push(`%${keyword}%`);  // Buscar coincidencias parciales
             paramIndex++;
@@ -151,14 +151,14 @@ export default class MedsRepository {
 
     async getMedByName(med){
         const client = new Client(DBConfig);
-        const sql = 'SELECT * FROM public.medicamento WHERE nombre LIKE $1%';
+        const sql = 'SELECT nombre FROM public.medicamento WHERE nombre LIKE $1%';
         const values = [med];
         try {
             await client.connect();
             const result = await client.query(sql, values);
             return result.rows.length > 0 ? result.rows : null;
         } catch (error) {
-            console.error('Error getting meds by droga:', error);
+            console.error('Error getting meds by nombre:', error);
             return null;
         } finally {
             await client.end();  // Cerrar la conexión
