@@ -111,8 +111,6 @@ export default class MedicamentoService {
         return obj;
     }
 
-    
-
     async putMedicamentoImage(url, id) {
         try {
             const res = await repo.putMedicamentoImage(url, id);
@@ -127,6 +125,24 @@ export default class MedicamentoService {
             }
         } catch (error) {
             obj.message = 'Error al obtener los medicamentos por droga';
+        }
+        return obj;
+    }
+
+    async getMedByName(med){
+        try {
+            const res = await repo.getMedByName(med);
+            if (res && res.length > 0) {
+                obj.success = true;
+                obj.message = 'Se encontraron los medicamentos';
+                obj.datos = res;
+            } else {
+                obj.success = false;
+                obj.message = 'No se encontraron medicamentos con el nombre proporcionado';
+                obj.datos = null;
+            }
+        } catch (error) {
+            obj.message = 'Error al obtener los medicamentos';
         }
         return obj;
     }

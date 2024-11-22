@@ -165,4 +165,20 @@ export default class MedsRepository {
             await client.end();  // Cerrar la conexión
         }
     }
+
+    async getMedByName(med){
+        const client = new Client(DBConfig);
+        const sql = 'SELECT * FROM public.medicamento WHERE nombre LIKE $1';
+        const values = [med];
+        try {
+            await client.connect();
+            const result = await client.query(sql, values);
+            return result.rows.length > 0 ? result.rows : null;
+        } catch (error) {
+            console.error('Error getting meds by droga:', error);
+            return null;
+        } finally {
+            await client.end();  // Cerrar la conexión
+        }
+    }
 }
