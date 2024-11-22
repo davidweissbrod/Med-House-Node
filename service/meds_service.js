@@ -93,24 +93,6 @@ export default class MedicamentoService {
         return obj;
     }
 
-    async getMedicamentosByDroga(droga) {
-        try {
-            const res = await repo.getMedicamentosByDroga(droga);
-            if (res && res.length > 0) {
-                obj.success = true;
-                obj.message = 'Se encontraron los medicamentos por droga';
-                obj.datos = res;
-            } else {
-                obj.success = false;
-                obj.message = 'No se encontraron medicamentos con el tipo de droga proporcionado';
-                obj.datos = null;
-            }
-        } catch (error) {
-            obj.message = 'Error al obtener los medicamentos por droga';
-        }
-        return obj;
-    }
-
     async putMedicamentoImage(url, id) {
         try {
             const res = await repo.putMedicamentoImage(url, id);

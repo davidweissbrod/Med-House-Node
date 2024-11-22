@@ -115,23 +115,6 @@ export default class MedsRepository {
         }
     }
 
-    // Obtener medicamentos por droga
-    async getMedicamentosByDroga(droga) {
-        const client = new Client(DBConfig);
-        const sql = 'SELECT id, nombre, descripcion, stock FROM public.medicamento WHERE droga = $1';
-        const values = [droga];
-        try {
-            await client.connect();
-            const result = await client.query(sql, values);
-            return result.rows.length > 0 ? result.rows : null;
-        } catch (error) {
-            console.error('Error getting meds by droga:', error);
-            return null;
-        } finally {
-            await client.end();  // Cerrar la conexión
-        }
-    }
-
     // Verificar si un medicamento existe por su ID
     async existsMedicamentoById(id) {
         const client = new Client(DBConfig);
@@ -168,7 +151,7 @@ export default class MedsRepository {
 
     async getMedByName(med){
         const client = new Client(DBConfig);
-        const sql = 'SELECT * FROM public.medicamento WHERE nombre LIKE $1';
+        const sql = 'SELECT * FROM public.medicamento WHERE nombre LIKE $1%';
         const values = [med];
         try {
             await client.connect();
