@@ -55,4 +55,16 @@ export default class BolsaRepository {
             return 0;
         }
     }
+
+    async deleteBolsa(idUser) {
+        const sql = 'DELETE FROM public.bolsa WHERE id_usuario = $1';
+        const values = [idUser];
+        try {
+            const result = await pool.query(sql, values);
+            return result.rowCount;
+        } catch (error) {
+            console.error('Error deleting from bolsa:', error);
+            return 0;
+        }
+    }
 }

@@ -9,6 +9,7 @@ import NecesitadosRouter from './controllers/necesitado_controller.js'
 import BusquedaRouter from './controllers/busqueda_controller.js'
 import RequestRouter from './controllers/request_controller.js'
 import PreguntasRouter from './controllers/preguntas_controller.js'
+import PedidosRouter from './controllers/pedidos_controller.js'
 
 const app = express();
 const port = 3000;
@@ -26,6 +27,7 @@ app.use('/necesitados', NecesitadosRouter)
 app.use('/busqueda', BusquedaRouter)
 app.use('/request', RequestRouter)
 app.use('/preguntas', PreguntasRouter)
+app.use('/pedidos', PedidosRouter)
 
 // Start the server
 app.listen(port, () => {
